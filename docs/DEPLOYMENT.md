@@ -15,16 +15,41 @@ Restart worldserver after deployment.
 
 ## C++ Deployment
 
-Copy the custom script into AzerothCore source:
+The Frostforge Guide is implemented in C++ and lives in the repository at:
 
-    cp cpp/frostforge_bot_group.cpp /home/wow/azerothcore/src/server/scripts/Custom/
+    cpp/frostforge_bot_group.cpp
 
-Then rebuild AzerothCore:
+Deploy it to the AzerothCore custom scripts directory:
+
+    cp cpp/frostforge_bot_group.cpp /home/wow/azerothcore/src/server/scripts/Custom/frostforge_bot_group.cpp
+
+Then rebuild and install AzerothCore:
+
+    cd /home/wow/azerothcore/build
+    make -j$(nproc)
+    make install
+
+Restart worldserver:
+
+    sudo systemctl restart acore-world.service
+
+If the server is still managed through tmux instead of systemd, restart the worldserver through the existing tmux workflow instead.
+
+### Lua Link Workaround
+
+If the AzerothCore build still fails because of the Lua link issue, apply the known local Lua link workaround before rebuilding.
+
+This workaround should be documented here because C++ changes require a rebuild, and the missing Lua link can otherwise be forgotten during future deployments.
+
+Current reminder:
 
     cd /home/wow/azerothcore/build
     make -j$(nproc)
 
-Then restart worldserver.
+If the build fails with Lua linking errors, re-apply the local Lua link fix that links the build against the correct Lua library, then run:
+
+    make -j$(nproc)
+    make install
 
 ## SQL Deployment
 

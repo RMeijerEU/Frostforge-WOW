@@ -14,12 +14,14 @@ Instead of treating dungeons as isolated instances, Frostforge connects them thr
 
 ## Repository structure
 
+```
 docs/       Project documentation and design notes
 campaign/   Dungeon campaign drafts and questline planning
 sql/        Custom database changes
 lua/        Custom server scripts
 website/    Website articles, changelogs and CMS content
 addon/      Addon or launcher-related files
+```
 
 ## Contribution workflow
 

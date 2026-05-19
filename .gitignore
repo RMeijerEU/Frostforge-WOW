@@ -54,3 +54,6 @@ Thumbs.db
 
 # Local notes
 local/
+
+# SQL exports/backups
+sql/exported/

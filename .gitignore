@@ -1,0 +1,36 @@
+# Secrets
+.env
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Server configs
+authserver.conf
+worldserver.conf
+*.conf.local
+config.local.php
+
+# Database dumps and backups
+*.sql.gz
+*.sql.zip
+*.dump
+*.bak
+backup/
+backups/
+
+# Logs
+*.log
+logs/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build output
+bin/
+obj/
+dist/
+build/

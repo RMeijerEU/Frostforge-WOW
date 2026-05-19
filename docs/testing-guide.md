@@ -23,11 +23,15 @@ What happened:
 What should happen:
 Steps to reproduce:
 Screenshot/video:
-Feedback format
+```
+
+## Feedback format
+
+```text
 What felt good?
 What was confusing?
 Was the reward useful?
 Was the lore clear?
 Was travel annoying?
 Would a new player understand this?
-
+```

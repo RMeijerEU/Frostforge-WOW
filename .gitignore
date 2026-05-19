@@ -5,7 +5,7 @@
 *.p12
 *.pfx
 
-# Server configs
+# Server configs with secrets
 authserver.conf
 worldserver.conf
 *.conf.local
@@ -34,3 +34,7 @@ bin/
 obj/
 dist/
 build/
+
+# Temporary files
+*.tmp
+*.swp

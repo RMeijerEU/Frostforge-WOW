@@ -1,43 +1,49 @@
-# SQL Apply Order
+# Frostforge SQL Apply Order
 
-This folder contains Frostforge custom SQL scripts.
+Apply Frostforge SQL patches to the `acore_world` database.
 
-Apply SQL manually and carefully. Do not run every file blindly on production.
+Do not apply these patches to `acore_auth` or `acore_characters` unless a specific patch explicitly says so.
 
-## Items
+## Recommended Order
 
-Starter item scripts:
+Core NPCs and shared objects should be applied before dungeon-specific campaign patches.
 
-- sql/items/frostforge_starter_t3_armor.sql
-- sql/items/frostforge_starter_t3_extras.sql
-- sql/items/frostforge_starter_t3_extras_looks.sql
-- sql/items/frostforge_starter_unique_class_looks.sql
+Suggested structure:
 
-These scripts affect starter gear, item visuals or class-specific item setup.
+    001_frostforge_core_npcs.sql
+    002_frostforge_ragefire_chasm.sql
+    003_frostforge_wailing_caverns.sql
+    004_frostforge_deadmines.sql
+    005_frostforge_shadowfang_keep.sql
+    006_frostforge_blackfathom_deeps.sql
+    007_frostforge_gnomeregan.sql
+    008_frostforge_razorfen_kraul.sql
+    009_frostforge_scarlet_monastery.sql
 
-## Campaign quests
+## Apply Example
 
-Campaign and lore scripts:
+    sudo mysql acore_world < sql/001_frostforge_core_npcs.sql
+    sudo mysql acore_world < sql/002_frostforge_ragefire_chasm.sql
 
-- sql/quests/frostforge_act04_sfk.sql
-- sql/quests/frostforge_act05_to_act11.sql
-- sql/quests/frostforge_rfk_lore_polish.sql
-- sql/quests/frostforge_sm_lore_polish.sql
+## Current Custom Ranges
 
-These scripts affect campaign quest text, dungeon progression or lore polish.
+    Quests: 900100 - 900155
+    NPCs:   900010 - 900056
+    Credits: 900071 - 900076
 
-## Website
+## Important Notes
 
-Website/CMS related SQL:
+Creature displays are handled through:
 
-- sql/website/frostforge_forum.sql
+    creature_template_model
 
-Review carefully before applying. Website SQL should not contain live users, password hashes, sessions or private account data.
+When adding custom NPCs, check both:
 
-## Example usage
+    creature_template
+    creature_template_model
 
-Apply a script manually:
+Quest starters and enders should be added through the correct quest relation tables for this AzerothCore version.
 
-    sudo mysql acore_world < sql/quests/frostforge_act04_sfk.sql
+Avoid using real player/account data in SQL patches.
 
-For website SQL, use the correct FusionCMS database instead of acore_world.
+Never commit SQL dumps containing accounts, passwords, characters or private data.

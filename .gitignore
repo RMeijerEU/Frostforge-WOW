@@ -1,40 +1,56 @@
-# Secrets
-.env
-*.key
-*.pem
-*.p12
-*.pfx
+# AzerothCore/build output
+build/
+bin/
+obj/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
 
-# Server configs with secrets
-authserver.conf
-worldserver.conf
-*.conf.local
-config.local.php
-
-# Database dumps and backups
-*.sql.gz
-*.sql.zip
-*.dump
-*.bak
-backup/
-backups/
+# Binaries
+*.o
+*.so
+*.dll
+*.exe
+*.a
+*.bin
 
 # Logs
 *.log
 logs/
+worldserver.log
+authserver.log
 
-# OS/editor files
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+# Secrets/configs
+*.conf
+*.conf.dist
+.env
+.env.*
+secrets/
+config/
+credentials/
 
-# Build output
-bin/
-obj/
-dist/
-build/
+# Database dumps / backups
+*.sql.gz
+*.dump
+*.bak
+*.backup
+*.tar
+*.tar.gz
+*.zip
+*.7z
 
 # Temporary files
 *.tmp
 *.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Local notes
+local/

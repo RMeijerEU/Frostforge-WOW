@@ -6,12 +6,19 @@ local L = Frostforge.Location
 local LVL = Frostforge.Level
 local C = Frostforge.Campaign
 
+local LANG_UNIVERSAL = 0
+
+local function NpcSay(creature, text)
+    if creature and text then
+        creature:SendUnitSay(text, LANG_UNIVERSAL)
+    end
+end
+
 local function OnSFKQuestAccept(event, player, quest)
     local questId = C.GetQuestId(quest)
 
     if questId == Q.SFK_TRAVEL then
-        C.SendMessage(player, "Silverpine lies north, beneath a shadow older than Stormwind's politics. I will meet you near The Sepulcher.")
-        C.TeleportToLocation(player, L.SILVERPINE_SEPULCHER)
+        C.SendMessage(player, "Silverpine lies north, beneath a shadow older than Stormwind's politics. Speak with me again when you are ready to travel.")
         return
     end
 
@@ -26,8 +33,7 @@ local function OnSFKQuestAccept(event, player, quest)
     end
 
     if questId == Q.SFK_GROUP then
-        C.SendMessage(player, "Travel to Shadowfang Keep. Gather your allies at its gates. The Frostforge Guide will prepare your party.")
-        C.TeleportToLocation(player, L.SFK_STAGING)
+        C.SendMessage(player, "Travel to Shadowfang Keep. Speak with me again when you are ready to go.")
         return
     end
 
@@ -57,11 +63,11 @@ local function OnForsakenScoutGossipHello(event, player, creature)
         player,
         Q.SFK_HOWLS,
         NPC.FORSAKEN_SCOUT,
-        "The beasts came from the keep. At first they seemed like wolves. Then they stood like men."
+        nil
     )
 
     player:GossipClearMenu()
-    player:GossipMenuAddItem(0, "The beasts came from the keep?", 0, 1)
+    player:GossipMenuAddItem(0, "What happened in these woods?", 0, 1)
     player:GossipSendMenu(1, creature)
 end
 
@@ -69,14 +75,22 @@ local function OnForsakenScoutGossipSelect(event, player, creature, sender, inti
     player:GossipClearMenu()
 
     if intid == 1 then
+        NpcSay(creature, "The beasts came from the keep. At first we thought them wolves. Then we saw them stand like men.")
         player:GossipMenuAddItem(0, "Arugal summoned them?", 0, 2)
         player:GossipSendMenu(1, creature)
         return
     end
 
     if intid == 2 then
+        NpcSay(creature, "Aye. Arugal called them as weapons, but no one controls a curse for long. Shadowfang Keep is not a fortress anymore. It is a den.")
         player:GossipMenuAddItem(0, "I will report this to Eldrin.", 0, 3)
         player:GossipSendMenu(1, creature)
+        return
+    end
+
+    if intid == 3 then
+        NpcSay(creature, "Then go. And keep your blade close. In Silverpine, the trees have learned to listen.")
+        player:GossipComplete()
         return
     end
 
@@ -88,7 +102,7 @@ local function OnGilneanRefugeeGossipHello(event, player, creature)
         player,
         Q.SFK_CURSE,
         NPC.GILNEAN_REFUGEE,
-        "The refugee speaks of men becoming beasts, and of a curse that does not obey its master."
+        nil
     )
 
     player:GossipClearMenu()
@@ -100,14 +114,22 @@ local function OnGilneanRefugeeGossipSelect(event, player, creature, sender, int
     player:GossipClearMenu()
 
     if intid == 1 then
-        player:GossipMenuAddItem(0, "So Arugal lost control.", 0, 2)
+        NpcSay(creature, "We thought walls would save us. We thought distance would save us. But curses do not respect borders.")
+        player:GossipMenuAddItem(0, "So Arugal lost control?", 0, 2)
         player:GossipSendMenu(1, creature)
         return
     end
 
     if intid == 2 then
+        NpcSay(creature, "Arugal opened a door in desperation. The Worgen came through it. Now men become beasts, and beasts remember enough of men to hate us.")
         player:GossipMenuAddItem(0, "I understand. I will go to the keep.", 0, 3)
         player:GossipSendMenu(1, creature)
+        return
+    end
+
+    if intid == 3 then
+        NpcSay(creature, "Then end what he began, if such a thing can be ended.")
+        player:GossipComplete()
         return
     end
 

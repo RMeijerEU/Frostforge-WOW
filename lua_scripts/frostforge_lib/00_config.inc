@@ -305,10 +305,10 @@ Frostforge.Location = {
 
     ZORAM_STRAND = {
         map = 1,
-        x = 3650.0,
-        y = 928.0,
-        z = 6.0,
-        o = 3.2
+        x = 3648.166,
+        y = 932.2607,
+        z = 6.2454495,
+        o = 5.447026
     },
 
     BFD_ENTRANCE = {

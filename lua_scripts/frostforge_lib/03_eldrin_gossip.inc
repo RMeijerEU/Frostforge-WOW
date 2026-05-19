@@ -46,7 +46,6 @@ local function AddActIOptions(player)
 end
 
 local function AddActIIOptions(player)
-    -- 900112 Road to the Crossroads
     if player:HasQuest(Q.WC_ROAD) and not player:GetQuestRewardStatus(Q.WC_ROAD) then
         if IsAlliance(player) then
             player:GossipMenuAddItem(0, "Send me to the Crossroads under the Campaign Veil.", 0, 201)
@@ -55,7 +54,6 @@ local function AddActIIOptions(player)
         end
     end
 
-    -- 900113 The Barrens Grow Restless
     if player:HasQuest(Q.WC_INVESTIGATION) and not player:GetQuestRewardStatus(Q.WC_INVESTIGATION) then
         if IsAlliance(player) then
             player:GossipMenuAddItem(0, "Send me to the Crossroads under the Campaign Veil.", 0, 201)
@@ -66,7 +64,6 @@ local function AddActIIOptions(player)
         player:GossipMenuAddItem(0, "Remind me where to investigate in the Barrens.", 0, 204)
     end
 
-    -- 900114 Gathering at the Wailing Caverns
     if player:HasQuest(Q.WC_GROUP) and not player:GetQuestRewardStatus(Q.WC_GROUP) then
         player:GossipMenuAddItem(0, "The group is ready for the Wailing Caverns.", 0, 205)
     end
@@ -75,7 +72,6 @@ end
 local function AddActIIIOptions(player, creature)
     local deadminesNotDone = Q.DM_DUNGEON and not player:GetQuestRewardStatus(Q.DM_DUNGEON)
     local wcDone = Q.WC_DUNGEON and player:GetQuestRewardStatus(Q.WC_DUNGEON)
-
     local onDeadminesMap = creature and creature:GetMapId() == Frostforge.Map.DEADMINES
 
     local hasEarlyDefiasQuest =
@@ -89,9 +85,6 @@ local function AddActIIIOptions(player, creature)
         or player:GetQuestRewardStatus(Q.DM_SI7)
         or player:GetQuestRewardStatus(Q.DM_GROUP)
 
-    -- Westfall travel helper.
-    -- Only show before the player has moved into the Moonbrook/Deadmines phase.
-    -- Never show inside Deadmines.
     if deadminesNotDone
         and not onDeadminesMap
         and not alreadyPastWestfallTravel
@@ -130,18 +123,16 @@ local function AddActIIIStockadesOptions(player, creature)
     local deadminesDone = Q.DM_DUNGEON and player:GetQuestRewardStatus(Q.DM_DUNGEON)
     local onStockadesMap = creature and creature:GetMapId() == Frostforge.Map.STOCKADES
 
-    -- Stormwind travel helper after Deadmines.
-    -- Never show inside Stockades.
     if stockadesNotDone
-    and deadminesDone
-    and not onStockadesMap
-    and (
-        player:HasQuest(Q.ST_ASHES)
-        or player:HasQuest(Q.ST_SI7_REPORT)
-        or player:HasQuest(Q.ST_STORMWIND)
-        or player:HasQuest(Q.ST_PRISON)
-        or player:GetQuestRewardStatus(Q.ST_ASHES)
-    ) then
+        and deadminesDone
+        and not onStockadesMap
+        and (
+            player:HasQuest(Q.ST_ASHES)
+            or player:HasQuest(Q.ST_SI7_REPORT)
+            or player:HasQuest(Q.ST_STORMWIND)
+            or player:HasQuest(Q.ST_PRISON)
+            or player:GetQuestRewardStatus(Q.ST_ASHES)
+        ) then
 
         if player:GetTeam() == Frostforge.Team.HORDE then
             player:GossipMenuAddItem(0, "Send me to Stormwind under the Campaign Veil.", 0, 401)
@@ -159,9 +150,145 @@ local function AddActIIIStockadesOptions(player, creature)
     end
 end
 
-local function OnEldrinGossipHello(event, player, creature)
-    player:GossipClearMenu()
+local function AddActIVAndBeyondOptions(player, creature)
+    if player:HasQuest(Q.SFK_TRAVEL) and not player:GetQuestRewardStatus(Q.SFK_TRAVEL) then
+        player:GossipMenuAddItem(0, "Send me to Silverpine.", 0, 501)
+    end
 
+    if player:HasQuest(Q.SFK_GROUP) and not player:GetQuestRewardStatus(Q.SFK_GROUP) then
+        player:GossipMenuAddItem(0, "Send me to Shadowfang Keep.", 0, 502)
+    end
+
+    if player:HasQuest(Q.BFD_TRAVEL) and not player:GetQuestRewardStatus(Q.BFD_TRAVEL) then
+        player:GossipMenuAddItem(0, "Send me to the Zoram Strand.", 0, 503)
+    end
+
+    if player:HasQuest(Q.BFD_GROUP) and not player:GetQuestRewardStatus(Q.BFD_GROUP) then
+        player:GossipMenuAddItem(0, "Send me to Blackfathom Deeps.", 0, 504)
+    end
+
+    if player:HasQuest(Q.GNOMER_TRAVEL) and not player:GetQuestRewardStatus(Q.GNOMER_TRAVEL) then
+        player:GossipMenuAddItem(0, "Send me to Gnomeregan.", 0, 505)
+    end
+
+    if player:HasQuest(Q.GNOMER_GROUP) and not player:GetQuestRewardStatus(Q.GNOMER_GROUP) then
+        player:GossipMenuAddItem(0, "Send me back to Gnomeregan.", 0, 506)
+    end
+
+    if player:HasQuest(Q.RFK_TRAVEL) and not player:GetQuestRewardStatus(Q.RFK_TRAVEL) then
+        player:GossipMenuAddItem(0, "Send me to Razorfen Kraul.", 0, 507)
+    end
+
+    if player:HasQuest(Q.RFK_GROUP) and not player:GetQuestRewardStatus(Q.RFK_GROUP) then
+        player:GossipMenuAddItem(0, "Send me back to Razorfen Kraul.", 0, 508)
+    end
+
+    if player:HasQuest(Q.SM_INTRO) and not player:GetQuestRewardStatus(Q.SM_INTRO) then
+        player:GossipMenuAddItem(0, "Send me to Scarlet Monastery.", 0, 509)
+    end
+end
+
+local function CreditEldrinTravelObjectives(player, creature)
+    if not player or not creature then
+        return
+    end
+
+    local creditRules = {
+        {
+            quest = Q.SFK_TRAVEL,
+            credit = 900071,
+            map = 0,
+            x = 506.0,
+            y = 1613.0,
+            z = 125.0,
+            distance = 250
+        },
+        {
+            quest = Q.SFK_GROUP,
+            credit = 900072,
+            map = L.SFK_STAGING.map,
+            x = L.SFK_STAGING.x,
+            y = L.SFK_STAGING.y,
+            z = L.SFK_STAGING.z,
+            distance = 100
+        },
+        {
+            quest = Q.BFD_TRAVEL,
+            credit = 900073,
+            map = L.ZORAM_STRAND.map,
+            x = L.ZORAM_STRAND.x,
+            y = L.ZORAM_STRAND.y,
+            z = L.ZORAM_STRAND.z,
+            distance = 120
+        },
+        {
+            quest = Q.BFD_GROUP,
+            credit = 900074,
+            map = L.BFD_STAGING.map,
+            x = L.BFD_STAGING.x,
+            y = L.BFD_STAGING.y,
+            z = L.BFD_STAGING.z,
+            distance = 150
+        },
+        {
+            quest = Q.GNOMER_TRAVEL,
+            credit = 900075,
+            map = L.GNOMEREGAN_STAGING.map,
+            x = L.GNOMEREGAN_STAGING.x,
+            y = L.GNOMEREGAN_STAGING.y,
+            z = L.GNOMEREGAN_STAGING.z,
+            distance = 150
+        },
+        {
+            quest = Q.GNOMER_GROUP,
+            credit = 900075,
+            map = L.GNOMEREGAN_STAGING.map,
+            x = L.GNOMEREGAN_STAGING.x,
+            y = L.GNOMEREGAN_STAGING.y,
+            z = L.GNOMEREGAN_STAGING.z,
+            distance = 150
+        },
+        {
+            quest = Q.RFK_TRAVEL,
+            credit = 900076,
+            map = L.RFK_STAGING.map,
+            x = L.RFK_STAGING.x,
+            y = L.RFK_STAGING.y,
+            z = L.RFK_STAGING.z,
+            distance = 150
+        },
+        {
+            quest = Q.RFK_GROUP,
+            credit = 900076,
+            map = L.RFK_STAGING.map,
+            x = L.RFK_STAGING.x,
+            y = L.RFK_STAGING.y,
+            z = L.RFK_STAGING.z,
+            distance = 150
+        }
+    }
+
+    for _, rule in ipairs(creditRules) do
+        if player:HasQuest(rule.quest)
+            and not player:CanCompleteQuest(rule.quest)
+            and creature:GetMapId() == rule.map
+            and creature:GetDistance(rule.x, rule.y, rule.z) <= rule.distance then
+
+            player:KilledMonsterCredit(rule.credit)
+
+            -- Fallback for travel/event-style objectives.
+            if not player:CanCompleteQuest(rule.quest) then
+                player:AreaExploredOrEventHappens(rule.quest)
+            end
+
+        end
+    end
+end
+
+local function OnEldrinGossipHello(event, player, creature)
+    CreditEldrinTravelObjectives(player, creature)
+
+    player:GossipClearMenu()
     player:GossipAddQuests(creature)
 
     AddPathExplanation(player)
@@ -169,6 +296,7 @@ local function OnEldrinGossipHello(event, player, creature)
     AddActIIOptions(player)
     AddActIIIOptions(player, creature)
     AddActIIIStockadesOptions(player, creature)
+    AddActIVAndBeyondOptions(player, creature)
 
     player:GossipSendMenu(1, creature)
 end
@@ -363,6 +491,127 @@ local function OnEldrinGossipSelect(event, player, creature, sender, intid, code
         return
     end
 
+    -- Act IV+ travel helpers
+    if intid == 501 then
+        if IsAlliance(player) and Frostforge.CampaignVeil then
+            Frostforge.CampaignVeil.Apply(player, Frostforge.Faction.NEUTRAL)
+
+            local group = player:GetGroup()
+            if group then
+                for _, member in pairs(group:GetMembers()) do
+                    if member and member:IsInWorld() then
+                        Frostforge.CampaignVeil.Apply(member, Frostforge.Faction.NEUTRAL)
+                    end
+                end
+            end
+
+            U.SendEldrinMessage(player, "The Campaign Veil surrounds you. Walk through Silverpine as a witness, not an invader.")
+        else
+            U.SendEldrinMessage(player, "I will send you to Silverpine. Seek me near The Sepulcher, where the road turns cold and the howls begin.")
+        end
+
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.SILVERPINE_SEPULCHER.map,
+            L.SILVERPINE_SEPULCHER.x,
+            L.SILVERPINE_SEPULCHER.y,
+            L.SILVERPINE_SEPULCHER.z,
+            L.SILVERPINE_SEPULCHER.o
+        )
+        return
+    end
+
+    if intid == 502 then
+        U.SendEldrinMessage(player, "I will send you to Shadowfang Keep. Gather your allies at its gates.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.SFK_STAGING.map,
+            L.SFK_STAGING.x,
+            L.SFK_STAGING.y,
+            L.SFK_STAGING.z,
+            L.SFK_STAGING.o
+        )
+        return
+    end
+
+    if intid == 503 then
+        U.SendEldrinMessage(player, "I will send you to the Zoram Strand. Listen to the shore before you descend into the ruins.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.ZORAM_STRAND.map,
+            L.ZORAM_STRAND.x,
+            L.ZORAM_STRAND.y,
+            L.ZORAM_STRAND.z,
+            L.ZORAM_STRAND.o
+        )
+        return
+    end
+
+    if intid == 504 then
+        U.SendEldrinMessage(player, "I will send you to Blackfathom Deeps. The ruins wait below.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.BFD_STAGING.map,
+            L.BFD_STAGING.x,
+            L.BFD_STAGING.y,
+            L.BFD_STAGING.z,
+            L.BFD_STAGING.o
+        )
+        return
+    end
+
+    if intid == 505 or intid == 506 then
+        U.SendEldrinMessage(player, "I will send you to Gnomeregan. The fallen city still remembers its betrayal.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.GNOMEREGAN_STAGING.map,
+            L.GNOMEREGAN_STAGING.x,
+            L.GNOMEREGAN_STAGING.y,
+            L.GNOMEREGAN_STAGING.z,
+            L.GNOMEREGAN_STAGING.o
+        )
+        return
+    end
+
+    if intid == 507 or intid == 508 then
+        U.SendEldrinMessage(player, "I will send you to Razorfen Kraul. The thorns remember older blood.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.RFK_STAGING.map,
+            L.RFK_STAGING.x,
+            L.RFK_STAGING.y,
+            L.RFK_STAGING.z,
+            L.RFK_STAGING.o
+        )
+        return
+    end
+
+    if intid == 509 then
+        U.SendEldrinMessage(player, "I will send you to Scarlet Monastery. Listen carefully there: grief and righteousness often wear the same colors.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.SM_STAGING.map,
+            L.SM_STAGING.x,
+            L.SM_STAGING.y,
+            L.SM_STAGING.z,
+            L.SM_STAGING.o
+        )
+        return
+    end
 
     player:GossipComplete()
 end

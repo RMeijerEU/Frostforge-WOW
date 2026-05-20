@@ -183,7 +183,7 @@ local function AddActIVAndBeyondOptions(player, creature)
         player:GossipMenuAddItem(0, "Send me back to Razorfen Kraul.", 0, 508)
     end
 
-    if player:HasQuest(Q.SM_INTRO) and not player:GetQuestRewardStatus(Q.SM_INTRO) then
+    if player:HasQuest(Q.SM_ROAD) and not player:GetQuestRewardStatus(Q.SM_ROAD) then
         player:GossipMenuAddItem(0, "Send me to Scarlet Monastery.", 0, 509)
     end
 end

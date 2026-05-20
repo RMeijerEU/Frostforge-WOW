@@ -17,6 +17,7 @@ Suggested structure:
     005_frostforge_shadowfang_keep.sql
     006_frostforge_blackfathom_deeps.sql
     007_frostforge_gnomeregan_expanded.sql
+    008_frostforge_razorfen_kraul_expanded.sql
     009_frostforge_scarlet_monastery_expanded.sql
     010_frostforge_scarlet_missing_npcs.sql
 

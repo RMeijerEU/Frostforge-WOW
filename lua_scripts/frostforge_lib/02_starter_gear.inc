@@ -32,6 +32,11 @@ local ITEM_WAND = 5071
 local ITEM_1H_MACE = 4569
 local ITEM_SHIELD = 3653
 
+local ITEM_SHAMAN_EARTH_TOTEM = 5175
+local ITEM_SHAMAN_FIRE_TOTEM = 5176
+local ITEM_SHAMAN_WATER_TOTEM = 5177
+local ITEM_SHAMAN_AIR_TOTEM = 5178
+
 -- Cloth starter gear
 local CLOTH_CHEST = 9749
 local CLOTH_BELT = 14113
@@ -211,6 +216,10 @@ local STARTER_GEAR = {
     [C.SHAMAN] = {
         common = {
             {ITEM_1H_MACE}, {ITEM_SHIELD},
+            {ITEM_SHAMAN_EARTH_TOTEM},
+            {ITEM_SHAMAN_FIRE_TOTEM},
+            {ITEM_SHAMAN_WATER_TOTEM},
+            {ITEM_SHAMAN_AIR_TOTEM},
             {LEATHER_CHEST}, {LEATHER_BELT}, {LEATHER_LEGS}, {LEATHER_BOOTS}, {LEATHER_BRACERS}, {LEATHER_GLOVES}, {LEATHER_CLOAK}
         }
     },

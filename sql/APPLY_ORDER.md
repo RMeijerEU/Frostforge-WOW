@@ -16,9 +16,8 @@ Suggested structure:
     004_frostforge_deadmines.sql
     005_frostforge_shadowfang_keep.sql
     006_frostforge_blackfathom_deeps.sql
-    007_frostforge_gnomeregan.sql
-    008_frostforge_razorfen_kraul.sql
     007_frostforge_gnomeregan_expanded.sql
+    008_frostforge_razorfen_kraul.sql
     009_frostforge_scarlet_monastery_expanded.sql
 
 ## Apply Example

@@ -2,194 +2,44 @@ USE acore_world;
 
 DELETE FROM creature_template WHERE entry IN (900057,900058,900059);
 
-INSERT INTO creature_template
-SELECT
-    900057,
-    difficulty_entry_1,
-    difficulty_entry_2,
-    difficulty_entry_3,
-    KillCredit1,
-    KillCredit2,
-    'Frostforge Southshore Scout',
-    'Hillsbrad Witness',
-    subname,
-    IconName,
-    gossip_menu_id,
-    minlevel,
-    maxlevel,
-    exp,
-    faction,
-    npcflag,
-    speed_walk,
-    speed_run,
-    scale,
-    rank,
-    dmgschool,
-    BaseAttackTime,
-    RangeAttackTime,
-    BaseVariance,
-    RangeVariance,
-    unit_class,
-    unit_flags,
-    unit_flags2,
-    dynamicflags,
-    family,
-    trainer_type,
-    trainer_spell,
-    trainer_class,
-    trainer_race,
-    type,
-    type_flags,
-    lootid,
-    pickpocketloot,
-    skinloot,
-    PetSpellDataId,
-    VehicleId,
-    mingold,
-    maxgold,
-    AIName,
-    MovementType,
-    HoverHeight,
-    HealthModifier,
-    ManaModifier,
-    ArmorModifier,
-    DamageModifier,
-    ExperienceModifier,
-    RacialLeader,
-    movementId,
-    RegenHealth,
-    mechanic_immune_mask,
-    spell_school_immune_mask,
-    flags_extra,
-    ScriptName,
-    VerifiedBuild
-FROM creature_template
-WHERE entry = 900055;
+DROP TEMPORARY TABLE IF EXISTS frostforge_tmp_creature_template;
+CREATE TEMPORARY TABLE frostforge_tmp_creature_template LIKE creature_template;
+
+INSERT INTO frostforge_tmp_creature_template
+SELECT * FROM creature_template WHERE entry = 900055;
+
+UPDATE frostforge_tmp_creature_template
+SET entry = 900057,
+    name = 'Frostforge Southshore Scout',
+    subname = 'Hillsbrad Witness';
 
 INSERT INTO creature_template
-SELECT
-    900058,
-    difficulty_entry_1,
-    difficulty_entry_2,
-    difficulty_entry_3,
-    KillCredit1,
-    KillCredit2,
-    'Frostforge Tarren Mill Apothecary',
-    'Forsaken Witness',
-    subname,
-    IconName,
-    gossip_menu_id,
-    minlevel,
-    maxlevel,
-    exp,
-    faction,
-    npcflag,
-    speed_walk,
-    speed_run,
-    scale,
-    rank,
-    dmgschool,
-    BaseAttackTime,
-    RangeAttackTime,
-    BaseVariance,
-    RangeVariance,
-    unit_class,
-    unit_flags,
-    unit_flags2,
-    dynamicflags,
-    family,
-    trainer_type,
-    trainer_spell,
-    trainer_class,
-    trainer_race,
-    type,
-    type_flags,
-    lootid,
-    pickpocketloot,
-    skinloot,
-    PetSpellDataId,
-    VehicleId,
-    mingold,
-    maxgold,
-    AIName,
-    MovementType,
-    HoverHeight,
-    HealthModifier,
-    ManaModifier,
-    ArmorModifier,
-    DamageModifier,
-    ExperienceModifier,
-    RacialLeader,
-    movementId,
-    RegenHealth,
-    mechanic_immune_mask,
-    spell_school_immune_mask,
-    flags_extra,
-    ScriptName,
-    VerifiedBuild
-FROM creature_template
-WHERE entry = 900055;
+SELECT * FROM frostforge_tmp_creature_template;
+
+TRUNCATE TABLE frostforge_tmp_creature_template;
+
+INSERT INTO frostforge_tmp_creature_template
+SELECT * FROM creature_template WHERE entry = 900055;
+
+UPDATE frostforge_tmp_creature_template
+SET entry = 900058,
+    name = 'Frostforge Tarren Mill Apothecary',
+    subname = 'Forsaken Witness';
 
 INSERT INTO creature_template
-SELECT
-    900059,
-    difficulty_entry_1,
-    difficulty_entry_2,
-    difficulty_entry_3,
-    KillCredit1,
-    KillCredit2,
-    'Frostforge Hillsbrad Refugee',
-    'Scarlet Witness',
-    subname,
-    IconName,
-    gossip_menu_id,
-    minlevel,
-    maxlevel,
-    exp,
-    faction,
-    npcflag,
-    speed_walk,
-    speed_run,
-    scale,
-    rank,
-    dmgschool,
-    BaseAttackTime,
-    RangeAttackTime,
-    BaseVariance,
-    RangeVariance,
-    unit_class,
-    unit_flags,
-    unit_flags2,
-    dynamicflags,
-    family,
-    trainer_type,
-    trainer_spell,
-    trainer_class,
-    trainer_race,
-    type,
-    type_flags,
-    lootid,
-    pickpocketloot,
-    skinloot,
-    PetSpellDataId,
-    VehicleId,
-    mingold,
-    maxgold,
-    AIName,
-    MovementType,
-    HoverHeight,
-    HealthModifier,
-    ManaModifier,
-    ArmorModifier,
-    DamageModifier,
-    ExperienceModifier,
-    RacialLeader,
-    movementId,
-    RegenHealth,
-    mechanic_immune_mask,
-    spell_school_immune_mask,
-    flags_extra,
-    ScriptName,
-    VerifiedBuild
-FROM creature_template
-WHERE entry = 900055;
+SELECT * FROM frostforge_tmp_creature_template;
+
+TRUNCATE TABLE frostforge_tmp_creature_template;
+
+INSERT INTO frostforge_tmp_creature_template
+SELECT * FROM creature_template WHERE entry = 900055;
+
+UPDATE frostforge_tmp_creature_template
+SET entry = 900059,
+    name = 'Frostforge Hillsbrad Refugee',
+    subname = 'Scarlet Witness';
+
+INSERT INTO creature_template
+SELECT * FROM frostforge_tmp_creature_template;
+
+DROP TEMPORARY TABLE IF EXISTS frostforge_tmp_creature_template;

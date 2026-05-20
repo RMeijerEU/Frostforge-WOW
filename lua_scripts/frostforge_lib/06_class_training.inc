@@ -164,6 +164,196 @@ local LEVEL_24_SPELLS = {
     }
 }
 
+-- Core class-defining spells from level 25 through 30.
+local LEVEL_30_SPELLS = {
+    [C.WARRIOR] = {
+        2458,  -- Berserker Stance
+        20252, -- Intercept
+        1464,  -- Slam
+        7369   -- Cleave Rank 2
+    },
+
+    [C.PALADIN] = {
+        20165, -- Seal of Light
+        879,   -- Exorcism
+        19742, -- Blessing of Wisdom
+        20164  -- Seal of Justice
+    },
+
+    [C.HUNTER] = {
+        1499,  -- Freezing Trap
+        5384,  -- Feign Death
+        1543,  -- Flare
+        3043   -- Scorpid Sting
+    },
+
+    [C.ROGUE] = {
+        408,   -- Kidney Shot
+        2983,  -- Sprint
+        1766,  -- Kick
+        703    -- Garrote
+    },
+
+    [C.PRIEST] = {
+        528,   -- Cure Disease
+        8122,  -- Psychic Scream
+        527,   -- Dispel Magic
+        596    -- Prayer of Healing
+    },
+
+    [C.SHAMAN] = {
+        8050,  -- Flame Shock
+        1535,  -- Fire Nova
+        3599,  -- Searing Totem
+        5394,  -- Healing Stream Totem
+        5675,  -- Mana Spring Totem
+        8232   -- Windfury Weapon
+    },
+
+    [C.MAGE] = {
+        1953,  -- Blink
+        2139,  -- Counterspell
+        475,   -- Remove Curse
+        130,   -- Slow Fall
+        759    -- Conjure Mana Gem
+    },
+
+    [C.WARLOCK] = {
+        712,   -- Summon Succubus
+        691,   -- Summon Felhunter
+        5138,  -- Drain Mana
+        1098,  -- Enslave Demon
+        710    -- Banish
+    },
+
+    [C.DRUID] = {
+        768,   -- Cat Form
+        783,   -- Travel Form
+        1066,  -- Aquatic Form
+        2782,  -- Remove Curse
+        2893   -- Abolish Poison
+    }
+}
+
+-- Core class-defining spells from level 31 through 35.
+local LEVEL_35_SPELLS = {
+    [C.WARRIOR] = {
+        18499, -- Berserker Rage
+        6552,  -- Pummel
+        7372   -- Hamstring Rank 2
+    },
+
+    [C.PALADIN] = {
+        4987,  -- Cleanse
+        1044,  -- Blessing of Freedom
+        20216  -- Divine Favor fallback/core utility if available
+    },
+
+    [C.HUNTER] = {
+        1510,  -- Volley
+        14271, -- Mongoose Bite Rank 2
+        14323  -- Hunter's Mark Rank 2
+    },
+
+    [C.ROGUE] = {
+        2094,  -- Blind
+        1856,  -- Vanish
+        8647   -- Expose Armor
+    },
+
+    [C.PRIEST] = {
+        1706,  -- Levitate
+        9484,  -- Shackle Undead
+        976    -- Shadow Protection
+    },
+
+    [C.SHAMAN] = {
+        20608, -- Reincarnation
+        421,   -- Chain Lightning
+        8170,  -- Disease Cleansing Totem
+        8166,  -- Poison Cleansing Totem
+        546    -- Water Walking
+    },
+
+    [C.MAGE] = {
+        1463,  -- Mana Shield
+        6143,  -- Frost Ward
+        543    -- Fire Ward
+    },
+
+    [C.WARLOCK] = {
+        126,   -- Eye of Kilrogg
+        6229,  -- Shadow Ward
+        1949   -- Hellfire
+    },
+
+    [C.DRUID] = {
+        6795,  -- Growl
+        5229,  -- Enrage
+        5209   -- Challenging Roar
+    }
+}
+
+-- Core class-defining spells from level 36 through 40.
+local LEVEL_40_SPELLS = {
+    [C.WARRIOR] = {
+        1680,  -- Whirlwind
+        871,   -- Shield Wall
+        1161   -- Challenging Shout
+    },
+
+    [C.PALADIN] = {
+        642,   -- Divine Shield
+        750,   -- Plate Mail
+        23214  -- Summon Charger fallback if available
+    },
+
+    [C.HUNTER] = {
+        13161, -- Aspect of the Beast
+        13813, -- Explosive Trap
+        1515   -- Tame Beast fallback/core if missing
+    },
+
+    [C.ROGUE] = {
+        1860,  -- Safe Fall
+        1725,  -- Distract
+        2836   -- Detect Traps
+    },
+
+    [C.PRIEST] = {
+        2096,  -- Mind Vision
+        552,   -- Abolish Disease
+        1006   -- Inner Fire Rank 3
+    },
+
+    [C.SHAMAN] = {
+        8177,  -- Grounding Totem
+        131,   -- Water Breathing
+        10595  -- Nature Resistance Totem
+    },
+
+    [C.MAGE] = {
+        7302,  -- Ice Armor
+        10,    -- Blizzard
+        3561,  -- Teleport: Stormwind
+        3562,  -- Teleport: Ironforge
+        3563,  -- Teleport: Undercity
+        3567   -- Teleport: Orgrimmar
+    },
+
+    [C.WARLOCK] = {
+        5784,  -- Felsteed
+        5484,  -- Howl of Terror
+        2362   -- Create Spellstone
+    },
+
+    [C.DRUID] = {
+        9634,  -- Dire Bear Form
+        29166, -- Innervate
+        20719  -- Feline Grace
+    }
+}
+
 local function LearnSpellPack(player, spellTable, label)
     local class = player:GetClass()
     local spells = spellTable[class]
@@ -195,6 +385,18 @@ end
 
 function Frostforge.ClassTraining.LearnLevel24ClassSpells(player)
     return LearnSpellPack(player, LEVEL_24_SPELLS, "level 24")
+end
+
+function Frostforge.ClassTraining.LearnLevel30ClassSpells(player)
+    return LearnSpellPack(player, LEVEL_30_SPELLS, "level 30")
+end
+
+function Frostforge.ClassTraining.LearnLevel35ClassSpells(player)
+    return LearnSpellPack(player, LEVEL_35_SPELLS, "level 35")
+end
+
+function Frostforge.ClassTraining.LearnLevel40ClassSpells(player)
+    return LearnSpellPack(player, LEVEL_40_SPELLS, "level 40")
 end
 
 print("[Frostforge] Class training loaded.")

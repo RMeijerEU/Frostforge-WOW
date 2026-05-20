@@ -44,6 +44,7 @@ Use these ranges unless they are changed in a later update.
 | Campaign Chapter | Quest Range | NPC Range | Credit NPC Range |
 | --- | --- | --- | --- |
 | Gnomeregan | 900141 - 900145 | 900051 - 900052 | 900075 |
+| Razorfen Kraul | 900146 - 900150 | 900053 - 900054 | 900076 |
 | Scarlet Monastery | 900151 - 900159 | 900055 - 900059 | 900077 - 900079 |
 | Uldaman | 900160 - 900179 | 900060 - 900069 | 900080 - 900089 |
 | Zul'Farrak | 900180 - 900199 | 900070 - 900079 | 900090 - 900099 |

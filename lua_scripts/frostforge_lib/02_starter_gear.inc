@@ -97,9 +97,13 @@ local SPELLS = {
         1130,  -- Hunter's Mark
         13163, -- Aspect of the Monkey
         5116,  -- Concussive Shot
+        1515,  -- Tame Beast
+        1462,  -- Beast Lore
         883,   -- Call Pet
+        2641,  -- Dismiss Pet
         982,   -- Revive Pet
-        6991   -- Feed Pet
+        6991,  -- Feed Pet
+        5149   -- Beast Training
     },
 
     [C.ROGUE] = {

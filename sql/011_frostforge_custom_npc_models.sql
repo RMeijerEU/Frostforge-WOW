@@ -18,6 +18,39 @@ VALUES
 (900057, 0, 2374, 1, 1, 0),
 (900058, 0, 4157, 1, 1, 0),
 
--- This assumes 900048 already has a good Gilnean/refugee display.
--- If 900048 has no model, replace this with a concrete display ID.
+-- Hillsbrad refugee uses a Forsaken-style witness display for now.
 (900059, 0, 4157, 1, 1, 0);
+
+-- Eldrin credit NPCs
+INSERT INTO creature_template_model
+(CreatureID, Idx, CreatureDisplayID, DisplayScale, Probability, VerifiedBuild)
+VALUES
+(900071, 0, 10727, 1, 1, 0),
+(900072, 0, 10727, 1, 1, 0),
+(900073, 0, 10727, 1, 1, 0),
+(900074, 0, 10727, 1, 1, 0),
+(900075, 0, 10727, 1, 1, 0),
+(900076, 0, 10727, 1, 1, 0);
+
+-- Razorfen Kraul story NPC positions
+UPDATE creature
+SET
+  map = 1,
+  position_x = -4468.2505,
+  position_y = -1686.6683,
+  position_z = 81.29649,
+  orientation = 3.865394,
+  phaseMask = 1,
+  spawnMask = 1
+WHERE guid = 5300812;
+
+UPDATE creature
+SET
+  map = 1,
+  position_x = -4466.2505,
+  position_y = -1684.6683,
+  position_z = 81.29649,
+  orientation = 3.865394,
+  phaseMask = 1,
+  spawnMask = 1
+WHERE guid = 5300813;

@@ -42,6 +42,55 @@ local CAMPAIGN_REPUTATION_FACTIONS = {
     930  -- Exodar
 }
 
+-- Campaign Veil is only for open-world story travel.
+-- It must never remain active inside dungeons, otherwise dungeon mobs reset.
+local DUNGEON_MAPS = {
+    [389] = true, -- Ragefire Chasm
+    [43]  = true, -- Wailing Caverns
+    [36]  = true, -- Deadmines
+    [34]  = true, -- Stormwind Stockades
+    [33]  = true, -- Shadowfang Keep
+    [48]  = true, -- Blackfathom Deeps
+    [90]  = true, -- Gnomeregan
+    [47]  = true, -- Razorfen Kraul
+    [189] = true, -- Scarlet Monastery
+
+    -- Future chapters
+    [70]  = true, -- Uldaman
+    [209] = true, -- Zul'Farrak
+    [349] = true, -- Maraudon
+    [129] = true, -- Razorfen Downs
+    [230] = true, -- Blackrock Depths
+    [229] = true, -- Blackrock Spire
+    [289] = true, -- Scholomance
+    [329] = true, -- Stratholme
+    [429] = true  -- Dire Maul
+}
+
+local function GetMapIdSafe(player)
+    if not player then
+        return nil
+    end
+
+    if player.GetMapId then
+        return player:GetMapId()
+    end
+
+    if player.GetMap then
+        local map = player:GetMap()
+        if map and map.GetMapId then
+            return map:GetMapId()
+        end
+    end
+
+    return nil
+end
+
+local function IsDungeonMap(player)
+    local mapId = GetMapIdSafe(player)
+    return mapId and DUNGEON_MAPS[mapId] == true
+end
+
 local function GetGuid(player)
     if not player then
         return nil
@@ -148,6 +197,12 @@ local function MaintainVeil(eventId, delay, repeats, player)
     end
 
     if not Frostforge.CampaignVeil.IsActive(player) then
+        return
+    end
+
+    if IsDungeonMap(player) then
+        Frostforge.CampaignVeil.Remove(player)
+        player:SendBroadcastMessage("|cff66ccffFrostforge:|r The Campaign Veil fades as you enter the dungeon.")
         return
     end
 

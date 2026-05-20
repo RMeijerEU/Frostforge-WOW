@@ -18,6 +18,7 @@ Suggested structure:
     006_frostforge_blackfathom_deeps.sql
     007_frostforge_gnomeregan_expanded.sql
     009_frostforge_scarlet_monastery_expanded.sql
+    010_frostforge_scarlet_missing_npcs.sql
 
 ## Apply Example
 

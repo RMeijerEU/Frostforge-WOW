@@ -1,4 +1,4 @@
--- Frostforge Act VI — Gnomeregan
+-- Frostforge Act VI â€” Gnomeregan
 
 local NPC = Frostforge.NPC
 local Q = Frostforge.Quest
@@ -7,7 +7,7 @@ local LVL = Frostforge.Level
 local C = Frostforge.Campaign
 
 local function OnGnomerQuestAccept(event, player, quest)
-    local questId = C.GetQuestIdSafe(quest)
+    local questId = C.GetQuestId(quest)
 
     if questId == Q.GNOMER_TRAVEL then
         C.SendEldrinMessage(player, "Gnomeregan was not merely a city. It was proof of what gnomish genius could build. Now it is proof of what panic, betrayal, and poisoned machines can destroy. Travel to the fallen city and hear what remains.")
@@ -38,7 +38,7 @@ local function OnGnomerQuestAccept(event, player, quest)
 end
 
 local function OnGnomerQuestReward(event, player, quest, opt)
-    local questId = C.GetQuestIdSafe(quest)
+    local questId = C.GetQuestId(quest)
 
     if questId == Q.GNOMER_DUNGEON then
         C.HandleDungeonReward(

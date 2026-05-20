@@ -1,4 +1,4 @@
-﻿-- Frostforge Act VIII-XI — Scarlet Monastery
+-- Frostforge Act VIII-XI — Scarlet Monastery
 
 local NPC = Frostforge.NPC
 local Q = Frostforge.Quest
@@ -7,7 +7,7 @@ local LVL = Frostforge.Level
 local C = Frostforge.Campaign
 
 local function OnSMQuestAccept(event, player, quest)
-    local questId = C.GetQuestIdSafe(quest)
+    local questId = C.GetQuestId(quest)
 
     if questId == Q.SM_RED_STANDARD then
         C.SendEldrinMessage(player, "The Scarlet Crusade marches beneath a red standard, but the banner no longer means protection. Begin in Hillsbrad and learn who they now call enemy.")
@@ -57,7 +57,7 @@ local function OnSMQuestAccept(event, player, quest)
 end
 
 local function OnSMQuestReward(event, player, quest, opt)
-    local questId = C.GetQuestIdSafe(quest)
+    local questId = C.GetQuestId(quest)
 
     if questId == Q.SM_GRAVEYARD then
         C.HandleDungeonReward(

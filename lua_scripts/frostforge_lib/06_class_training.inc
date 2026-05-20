@@ -271,7 +271,6 @@ local LEVEL_35_SPELLS = {
         20608, -- Reincarnation
         421,   -- Chain Lightning
         8170,  -- Disease Cleansing Totem
-        8166,  -- Poison Cleansing Totem
         546    -- Water Walking
     },
 

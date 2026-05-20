@@ -8,7 +8,7 @@ local F = Frostforge.Faction
 Frostforge.CampaignVeil.Active = Frostforge.CampaignVeil.Active or {}
 Frostforge.CampaignVeil.TickRegistered = Frostforge.CampaignVeil.TickRegistered or {}
 
-local VEIL_TICK_MS = 1000
+local VEIL_TICK_MS = 100
 
 local function GetGuid(player)
     if not player then

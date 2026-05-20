@@ -43,6 +43,7 @@ Use these ranges unless they are changed in a later update.
 
 | Campaign Chapter | Quest Range | NPC Range | Credit NPC Range |
 | --- | --- | --- | --- |
+| Scarlet Monastery | 900151 - 900159 | 900055 - 900059 | 900077 - 900079 |
 | Uldaman | 900160 - 900179 | 900060 - 900069 | 900080 - 900089 |
 | Zul'Farrak | 900180 - 900199 | 900070 - 900079 | 900090 - 900099 |
 | Maraudon | 900200 - 900219 | 900080 - 900089 | 900100 - 900109 |

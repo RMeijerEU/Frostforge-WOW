@@ -20,6 +20,7 @@ Suggested structure:
     008_frostforge_razorfen_kraul_expanded.sql
     009_frostforge_scarlet_monastery_expanded.sql
     010_frostforge_scarlet_missing_npcs.sql
+    011_frostforge_custom_npc_models.sql
 
 ## Apply Example
 

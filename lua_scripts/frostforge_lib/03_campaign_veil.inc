@@ -6,6 +6,9 @@ Frostforge.CampaignVeil = Frostforge.CampaignVeil or {}
 local F = Frostforge.Faction
 
 Frostforge.CampaignVeil.Active = Frostforge.CampaignVeil.Active or {}
+Frostforge.CampaignVeil.TickRegistered = Frostforge.CampaignVeil.TickRegistered or {}
+
+local VEIL_TICK_MS = 1000
 
 local function GetGuid(player)
     if not player then
@@ -42,6 +45,40 @@ local function StopUnitCombat(unit)
     end
 end
 
+local function MaintainVeil(eventId, delay, repeats, player)
+    if not player or not player:IsInWorld() then
+        return
+    end
+
+    if not Frostforge.CampaignVeil.IsActive(player) then
+        return
+    end
+
+    player:SetFaction(F.NEUTRAL)
+
+    if player.SetPvP then
+        player:SetPvP(false)
+    end
+
+    StopUnitCombat(player)
+end
+
+local function StartVeilTick(player)
+    local guid = GetGuid(player)
+    if not guid then
+        return
+    end
+
+    if Frostforge.CampaignVeil.TickRegistered[guid] then
+        return
+    end
+
+    if player.RegisterEvent then
+        player:RegisterEvent(MaintainVeil, VEIL_TICK_MS, 0)
+        Frostforge.CampaignVeil.TickRegistered[guid] = true
+    end
+end
+
 function Frostforge.CampaignVeil.Apply(player, factionId)
     -- Frostforge Campaign Veil should make players neutral witnesses,
     -- regardless of their race, faction, or destination city.
@@ -59,6 +96,7 @@ function Frostforge.CampaignVeil.Apply(player, factionId)
     end
 
     StopUnitCombat(player)
+    StartVeilTick(player)
 
     player:SendBroadcastMessage("|cff66ccffFrostforge:|r The Campaign Veil surrounds you. You may walk this chapter as a witness, not an invader.")
 end
@@ -75,6 +113,11 @@ function Frostforge.CampaignVeil.Remove(player)
     local guid = GetGuid(player)
     if guid then
         Frostforge.CampaignVeil.Active[guid] = nil
+        Frostforge.CampaignVeil.TickRegistered[guid] = nil
+    end
+
+    if player.RemoveEvents then
+        player:RemoveEvents()
     end
 
     StopUnitCombat(player)
@@ -130,16 +173,5 @@ function Frostforge.CampaignVeil.RemoveFromGroup(player)
         end
     end
 end
-
-local function OnVeiledPlayerEnterCombat(event, player, enemy)
-    if not Frostforge.CampaignVeil.IsActive(player) then
-        return
-    end
-
-    StopUnitCombat(player)
-    StopUnitCombat(enemy)
-end
-
-RegisterPlayerEvent(33, OnVeiledPlayerEnterCombat)
 
 print("[Frostforge] Campaign Veil loaded.")

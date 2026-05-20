@@ -4,6 +4,7 @@ Frostforge = Frostforge or {}
 Frostforge.CampaignVeil = Frostforge.CampaignVeil or {}
 
 local F = Frostforge.Faction
+Frostforge.CampaignVeil.Active = Frostforge.CampaignVeil.Active or {}
 
 function Frostforge.CampaignVeil.Apply(player, factionId)
     -- Frostforge Campaign Veil should make players neutral witnesses,
@@ -11,6 +12,9 @@ function Frostforge.CampaignVeil.Apply(player, factionId)
     factionId = F.NEUTRAL
 
     player:SetFaction(factionId)
+
+    local guid = player:GetGUIDLow()
+    Frostforge.CampaignVeil.Active[guid] = true
 
     if player.SetPvP then
         player:SetPvP(false)
@@ -36,6 +40,9 @@ function Frostforge.CampaignVeil.ApplyStormwind(player)
 end
 
 function Frostforge.CampaignVeil.Remove(player)
+    local guid = player:GetGUIDLow()
+    Frostforge.CampaignVeil.Active[guid] = nil
+
     if player.CombatStop then
         player:CombatStop()
     end
@@ -80,6 +87,14 @@ function Frostforge.CampaignVeil.ApplyStormwindToGroup(player)
     end
 end
 
+function Frostforge.CampaignVeil.IsActive(player)
+    if not player then
+        return false
+    end
+
+    return Frostforge.CampaignVeil.Active[player:GetGUIDLow()] == true
+end
+
 function Frostforge.CampaignVeil.RemoveFromGroup(player)
     Frostforge.CampaignVeil.Remove(player)
 
@@ -95,3 +110,33 @@ function Frostforge.CampaignVeil.RemoveFromGroup(player)
         end
     end
 end
+
+local function OnVeiledPlayerEnterCombat(event, player, enemy)
+    if not Frostforge.CampaignVeil.IsActive(player) then
+        return
+    end
+
+    if player.CombatStop then
+        player:CombatStop()
+    end
+
+    if player.ClearInCombat then
+        player:ClearInCombat()
+    end
+
+    if enemy then
+        if enemy.AttackStop then
+            enemy:AttackStop()
+        end
+
+        if enemy.CombatStop then
+            enemy:CombatStop()
+        end
+
+        if enemy.ClearInCombat then
+            enemy:ClearInCombat()
+        end
+    end
+end
+
+RegisterPlayerEvent(33, OnVeiledPlayerEnterCombat)

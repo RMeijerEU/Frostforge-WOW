@@ -7,12 +7,13 @@ local F = Frostforge.Faction
 
 Frostforge.CampaignVeil.Active = Frostforge.CampaignVeil.Active or {}
 Frostforge.CampaignVeil.TickRegistered = Frostforge.CampaignVeil.TickRegistered or {}
+Frostforge.CampaignVeil.OriginalReputation = Frostforge.CampaignVeil.OriginalReputation or {}
 
--- Short interval because this is a safety net for hostile city/open-world NPCs.
+-- Short interval because this is a fallback safety net for hostile city/open-world NPCs.
 local VEIL_TICK_MS = 100
 
 -- Unit field / flags for WotLK/AzerothCore.
--- These flags are used as extra protection, but some NPCs may still briefly aggro.
+-- These are extra protection. Reputation/faction diplomacy is the primary solution.
 local UNIT_FIELD_FLAGS = 46
 local UNIT_FLAG_NON_ATTACKABLE = 0x00000002
 local UNIT_FLAG_IMMUNE_TO_NPC = 0x00000200
@@ -22,6 +23,24 @@ local CAMPAIGN_VEIL_FLAGS =
     UNIT_FLAG_NON_ATTACKABLE +
     UNIT_FLAG_IMMUNE_TO_NPC +
     UNIT_FLAG_PACIFIED
+
+-- Exalted-level value. Used temporarily while the Campaign Veil is active.
+local CAMPAIGN_REPUTATION_VALUE = 42000
+
+-- Major player city factions used by cross-faction Frostforge chapters.
+local CAMPAIGN_REPUTATION_FACTIONS = {
+    76,  -- Orgrimmar
+    68,  -- Undercity
+    81,  -- Thunder Bluff
+    530, -- Darkspear Trolls
+    911, -- Silvermoon City
+
+    72,  -- Stormwind
+    47,  -- Ironforge
+    69,  -- Darnassus
+    54,  -- Gnomeregan Exiles
+    930  -- Exodar
+}
 
 local function GetGuid(player)
     if not player then
@@ -78,6 +97,51 @@ local function RemoveVeilFlags(player)
     end
 end
 
+local function ApplyCampaignReputation(player)
+    if not player or not player.SetReputation or not player.GetReputation then
+        return
+    end
+
+    local guid = GetGuid(player)
+    if not guid then
+        return
+    end
+
+    -- Only apply once per veil period. This prevents reputation level-up spam.
+    if Frostforge.CampaignVeil.OriginalReputation[guid] then
+        return
+    end
+
+    Frostforge.CampaignVeil.OriginalReputation[guid] = {}
+
+    for _, factionId in ipairs(CAMPAIGN_REPUTATION_FACTIONS) do
+        Frostforge.CampaignVeil.OriginalReputation[guid][factionId] = player:GetReputation(factionId)
+        player:SetReputation(factionId, CAMPAIGN_REPUTATION_VALUE)
+    end
+end
+
+local function RestoreCampaignReputation(player)
+    if not player or not player.SetReputation then
+        return
+    end
+
+    local guid = GetGuid(player)
+    if not guid then
+        return
+    end
+
+    local original = Frostforge.CampaignVeil.OriginalReputation[guid]
+    if not original then
+        return
+    end
+
+    for factionId, value in pairs(original) do
+        player:SetReputation(factionId, value)
+    end
+
+    Frostforge.CampaignVeil.OriginalReputation[guid] = nil
+end
+
 local function MaintainVeil(eventId, delay, repeats, player)
     if not player or not player:IsInWorld() then
         return
@@ -87,6 +151,7 @@ local function MaintainVeil(eventId, delay, repeats, player)
         return
     end
 
+    -- Do not call ApplyCampaignReputation here. It causes reputation spam.
     player:SetFaction(F.NEUTRAL)
     ApplyVeilFlags(player)
 
@@ -119,6 +184,7 @@ function Frostforge.CampaignVeil.Apply(player, factionId)
     factionId = F.NEUTRAL
 
     player:SetFaction(factionId)
+    ApplyCampaignReputation(player)
     ApplyVeilFlags(player)
 
     local guid = GetGuid(player)
@@ -159,6 +225,7 @@ function Frostforge.CampaignVeil.Remove(player)
 
     StopUnitCombat(player)
     RemoveVeilFlags(player)
+    RestoreCampaignReputation(player)
 
     player:SetFactionForRace(player:GetRace())
     player:SendBroadcastMessage("|cff66ccffFrostforge:|r The Campaign Veil fades. Your normal faction has been restored.")

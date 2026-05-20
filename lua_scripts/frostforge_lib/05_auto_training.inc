@@ -42,6 +42,18 @@ local function TrainPlayerForCurrentLevel(player, showMessage)
         Training.LearnLevel24ClassSpells(player)
     end
 
+    if level >= 30 and Training and Training.LearnLevel30ClassSpells then
+        Training.LearnLevel30ClassSpells(player)
+    end
+
+    if level >= 35 and Training and Training.LearnLevel35ClassSpells then
+        Training.LearnLevel35ClassSpells(player)
+    end
+
+    if level >= 40 and Training and Training.LearnLevel40ClassSpells then
+        Training.LearnLevel40ClassSpells(player)
+    end
+
     if showMessage then
         U.SendGuideMessage(player, "Your class training and weapon skills have been updated for level " .. level .. ".")
     end

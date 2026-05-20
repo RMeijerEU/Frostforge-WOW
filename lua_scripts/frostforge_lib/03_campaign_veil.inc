@@ -6,7 +6,9 @@ Frostforge.CampaignVeil = Frostforge.CampaignVeil or {}
 local F = Frostforge.Faction
 
 function Frostforge.CampaignVeil.Apply(player, factionId)
-    factionId = factionId or F.NEUTRAL
+    -- Frostforge Campaign Veil should make players neutral witnesses,
+    -- regardless of their race, faction, or destination city.
+    factionId = F.NEUTRAL
 
     player:SetFaction(factionId)
 
@@ -26,7 +28,11 @@ function Frostforge.CampaignVeil.Apply(player, factionId)
 end
 
 function Frostforge.CampaignVeil.ApplyOrgrimmar(player)
-    Frostforge.CampaignVeil.Apply(player, F.ORGRIMMAR_WITNESS)
+    Frostforge.CampaignVeil.Apply(player, F.NEUTRAL)
+end
+
+function Frostforge.CampaignVeil.ApplyStormwind(player)
+    Frostforge.CampaignVeil.Apply(player, F.NEUTRAL)
 end
 
 function Frostforge.CampaignVeil.Remove(player)
@@ -54,6 +60,22 @@ function Frostforge.CampaignVeil.ApplyOrgrimmarToGroup(player)
     for _, member in pairs(members) do
         if member and member:IsInWorld() then
             Frostforge.CampaignVeil.ApplyOrgrimmar(member)
+        end
+    end
+end
+
+function Frostforge.CampaignVeil.ApplyStormwindToGroup(player)
+    Frostforge.CampaignVeil.ApplyStormwind(player)
+
+    local group = player:GetGroup()
+    if not group then
+        return
+    end
+
+    local members = group:GetMembers()
+    for _, member in pairs(members) do
+        if member and member:IsInWorld() then
+            Frostforge.CampaignVeil.ApplyStormwind(member)
         end
     end
 end

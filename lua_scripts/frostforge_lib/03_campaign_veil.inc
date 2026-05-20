@@ -8,7 +8,20 @@ local F = Frostforge.Faction
 Frostforge.CampaignVeil.Active = Frostforge.CampaignVeil.Active or {}
 Frostforge.CampaignVeil.TickRegistered = Frostforge.CampaignVeil.TickRegistered or {}
 
+-- Short interval because this is a safety net for hostile city/open-world NPCs.
 local VEIL_TICK_MS = 100
+
+-- Unit field / flags for WotLK/AzerothCore.
+-- These flags are used as extra protection, but some NPCs may still briefly aggro.
+local UNIT_FIELD_FLAGS = 46
+local UNIT_FLAG_NON_ATTACKABLE = 0x00000002
+local UNIT_FLAG_IMMUNE_TO_NPC = 0x00000200
+local UNIT_FLAG_PACIFIED = 0x00020000
+
+local CAMPAIGN_VEIL_FLAGS =
+    UNIT_FLAG_NON_ATTACKABLE +
+    UNIT_FLAG_IMMUNE_TO_NPC +
+    UNIT_FLAG_PACIFIED
 
 local function GetGuid(player)
     if not player then
@@ -45,6 +58,26 @@ local function StopUnitCombat(unit)
     end
 end
 
+local function ApplyVeilFlags(player)
+    if not player then
+        return
+    end
+
+    if player.SetFlag then
+        player:SetFlag(UNIT_FIELD_FLAGS, CAMPAIGN_VEIL_FLAGS)
+    end
+end
+
+local function RemoveVeilFlags(player)
+    if not player then
+        return
+    end
+
+    if player.RemoveFlag then
+        player:RemoveFlag(UNIT_FIELD_FLAGS, CAMPAIGN_VEIL_FLAGS)
+    end
+end
+
 local function MaintainVeil(eventId, delay, repeats, player)
     if not player or not player:IsInWorld() then
         return
@@ -55,6 +88,7 @@ local function MaintainVeil(eventId, delay, repeats, player)
     end
 
     player:SetFaction(F.NEUTRAL)
+    ApplyVeilFlags(player)
 
     if player.SetPvP then
         player:SetPvP(false)
@@ -85,6 +119,7 @@ function Frostforge.CampaignVeil.Apply(player, factionId)
     factionId = F.NEUTRAL
 
     player:SetFaction(factionId)
+    ApplyVeilFlags(player)
 
     local guid = GetGuid(player)
     if guid then
@@ -116,11 +151,14 @@ function Frostforge.CampaignVeil.Remove(player)
         Frostforge.CampaignVeil.TickRegistered[guid] = nil
     end
 
+    -- This removes the player-level maintain tick. Be careful if future scripts
+    -- also use player:RegisterEvent for long-running player timers.
     if player.RemoveEvents then
         player:RemoveEvents()
     end
 
     StopUnitCombat(player)
+    RemoveVeilFlags(player)
 
     player:SetFactionForRace(player:GetRace())
     player:SendBroadcastMessage("|cff66ccffFrostforge:|r The Campaign Veil fades. Your normal faction has been restored.")

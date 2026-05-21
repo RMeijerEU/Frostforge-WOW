@@ -26,3 +26,36 @@ SET
   phaseMask = 1,
   spawnMask = 1
 WHERE guid = 5300803;
+-- Scarlet Monastery / Hillsbrad bridge story NPC positions
+UPDATE creature
+SET
+  map = 0,
+  position_x = 2879.0762,
+  position_y = -822.2531,
+  position_z = 160,
+  orientation = 2.2961,
+  phaseMask = 1,
+  spawnMask = 1
+WHERE guid = 5300840;
+
+UPDATE creature
+SET
+  map = 0,
+  position_x = 2881.2068,
+  position_y = -818.7175,
+  position_z = 160,
+  orientation = 3.0713,
+  phaseMask = 1,
+  spawnMask = 1
+WHERE guid = 5300841;
+
+UPDATE creature
+SET
+  map = 0,
+  position_x = 2874.6587,
+  position_y = -822.8465,
+  position_z = 160,
+  orientation = 1.3057,
+  phaseMask = 1,
+  spawnMask = 1
+WHERE guid = 5300842;

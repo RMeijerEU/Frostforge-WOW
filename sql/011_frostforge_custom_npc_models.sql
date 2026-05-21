@@ -19,7 +19,7 @@ VALUES
 (900058, 0, 4157, 1, 1, 0),
 
 -- Hillsbrad refugee uses a Forsaken-style witness display for now.
-(900059, 0, 4157, 1, 1, 0);
+(900059, 0, 2374, 1, 1, 0);
 
 -- Eldrin credit NPCs
 INSERT INTO creature_template_model

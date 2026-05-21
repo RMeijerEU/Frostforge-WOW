@@ -224,10 +224,10 @@ local function CreditEldrinTravelObjectives(player, creature)
         {
             quest = Q.BFD_GROUP,
             credit = 900074,
-            map = L.BFD_STAGING.map,
-            x = L.BFD_STAGING.x,
-            y = L.BFD_STAGING.y,
-            z = L.BFD_STAGING.z,
+            map = L.BFD_INSIDE.map,
+            x = L.BFD_INSIDE.x,
+            y = L.BFD_INSIDE.y,
+            z = L.BFD_INSIDE.z,
             distance = 150
         },
         {

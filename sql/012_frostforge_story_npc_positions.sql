@@ -59,3 +59,26 @@ SET
   phaseMask = 1,
   spawnMask = 1
 WHERE guid = 5300842;
+
+-- Scarlet Road story NPC positions
+UPDATE creature
+SET
+  map = 0,
+  position_x = 2876.50,
+  position_y = -818.90,
+  position_z = 160,
+  orientation = 2.60,
+  phaseMask = 1,
+  spawnMask = 1
+WHERE guid = 5300822;
+
+UPDATE creature
+SET
+  map = 0,
+  position_x = 2873.00,
+  position_y = -819.50,
+  position_z = 160,
+  orientation = 1.80,
+  phaseMask = 1,
+  spawnMask = 1
+WHERE guid = 5300823;

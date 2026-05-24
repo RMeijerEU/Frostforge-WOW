@@ -50,6 +50,11 @@ Frostforge.NPC = {
     -- Act XII — Uldaman
     ULDAMAN_RELIQUARY_EXPLORER = 900060,
     ULDAMAN_STONEWATCHER = 900061,
+
+    -- Act XIII — Zul'Farrak
+    ZF_TANARIS_CHRONICLER = 900070,
+    ZF_SANDFURY_EXILE = 900077,
+    ZF_RELIC_SEEKER = 900078,
 }
 
 Frostforge.Quest = {
@@ -123,6 +128,13 @@ Frostforge.Quest = {
     ULDAMAN_TROGG_WARNING = 900162,
     ULDAMAN_GROUP = 900163,
     ULDAMAN_DUNGEON = 900164,
+
+    -- Act XIII — Zul'Farrak
+    ZF_SANDS_OF_TANARIS = 900180,
+    ZF_SANDFURY_EMPIRE = 900181,
+    ZF_RELICS_IN_THE_SAND = 900182,
+    ZF_GROUP = 900183,
+    ZF_DUNGEON = 900184,
 }
 
 Frostforge.Map = {
@@ -139,6 +151,7 @@ Frostforge.Map = {
     RAZORFEN_KRAUL = 47,
     SCARLET_MONASTERY = 189,
     ULDAMAN = 70,
+    ZULFARRAK = 209,
 }
 
 Frostforge.Class = {
@@ -447,6 +460,40 @@ Frostforge.Location = {
         z = -46.02,
         o = 1.57
     },
+
+    -- Act XIII — Zul'Farrak
+
+    ZF_GADGETZAN = {
+        map = 1,
+        x = -7161.545,
+        y = -3784.858,
+        z = 8.8464775,
+        o = 3.2560885
+    },
+
+    ZF_STAGING = {
+        map = 1,
+        x = -6830.061,
+        y = -2880.2551,
+        z = 8.929153,
+        o = 5.785069
+    },
+
+    ZF_ENTRANCE = {
+        map = 1,
+        x = -6798.3804,
+        y = -2895.9358,
+        z = 9.17488,
+        o = 2.1502473
+    },
+
+    ZF_INSIDE = {
+        map = 209,
+        x = 1218.9818,
+        y = 847.068,
+        z = 9.76403,
+        o = 5.8433847
+    },
 }
 
 Frostforge.Level = {
@@ -469,4 +516,5 @@ Frostforge.Level = {
     SM_CATHEDRAL_REWARD = 40,
 
     ULDAMAN_REWARD = 45,
+    ZF_REWARD = 50,
 }

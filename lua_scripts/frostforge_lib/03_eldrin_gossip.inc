@@ -201,6 +201,16 @@ local function AddActIVAndBeyondOptions(player, creature)
     if needsUldamanTravel then
         player:GossipMenuAddItem(0, "Send me to Uldaman.", 0, 510)
     end
+
+    local needsZulFarrakTravel =
+        (player:HasQuest(Q.ZF_SANDS_OF_TANARIS) and not player:GetQuestRewardStatus(Q.ZF_SANDS_OF_TANARIS))
+        or (player:HasQuest(Q.ZF_SANDFURY_EMPIRE) and not player:GetQuestRewardStatus(Q.ZF_SANDFURY_EMPIRE))
+        or (player:HasQuest(Q.ZF_RELICS_IN_THE_SAND) and not player:GetQuestRewardStatus(Q.ZF_RELICS_IN_THE_SAND))
+        or (player:HasQuest(Q.ZF_GROUP) and not player:GetQuestRewardStatus(Q.ZF_GROUP))
+
+    if needsZulFarrakTravel then
+        player:GossipMenuAddItem(0, "Send me to Zul'Farrak.", 0, 511)
+    end
 end
 
 local function CreditEldrinTravelObjectives(player, creature)
@@ -638,6 +648,21 @@ local function OnEldrinGossipSelect(event, player, creature, sender, intid, code
             L.ULDAMAN_STAGING.y,
             L.ULDAMAN_STAGING.z,
             L.ULDAMAN_STAGING.o
+        )
+        return
+    end
+
+    if intid == 511 then
+        U.SendEldrinMessage(player, "I will send you to Tanaris. The desert looks empty, but old empires leave deep tracks in the sand.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.ZF_GADGETZAN.map,
+            L.ZF_GADGETZAN.x,
+            L.ZF_GADGETZAN.y,
+            L.ZF_GADGETZAN.z,
+            L.ZF_GADGETZAN.o
         )
         return
     end

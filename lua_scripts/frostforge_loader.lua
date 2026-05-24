@@ -27,6 +27,7 @@ dofile(base .. "act06_gnomeregan.inc")
 dofile(base .. "act07_razorfen_kraul.inc")
 dofile(base .. "act08_scarlet_monastery.inc")
 dofile(base .. "act09_uldaman.inc")
+dofile(base .. "act10_zulfarrak.inc")
 
 dofile(base .. "03_eldrin_gossip.inc")
 

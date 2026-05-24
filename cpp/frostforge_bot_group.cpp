@@ -31,6 +31,8 @@ namespace Frostforge
 
     static constexpr uint32 MAP_ULDAMAN = 70;
 
+    static constexpr uint32 MAP_ZULFARRAK = 209;
+
     static constexpr float RFC_INSIDE_X = 5.835333f;
     static constexpr float RFC_INSIDE_Y = -25.63047f;
     static constexpr float RFC_INSIDE_Z = -20.681316f;
@@ -144,6 +146,24 @@ namespace Frostforge
     static constexpr float ULDAMAN_PORTAL_Y = -2950.7139f;
     static constexpr float ULDAMAN_PORTAL_Z = 209.77402f;
     static constexpr float ULDAMAN_PORTAL_O = 3.5902698f;
+
+    static constexpr float ZF_INSIDE_X = 1218.9818f;
+    static constexpr float ZF_INSIDE_Y = 847.068f;
+    static constexpr float ZF_INSIDE_Z = 9.76403f;
+    static constexpr float ZF_INSIDE_O = 5.8433847f;
+
+    static constexpr float ZF_ENTRANCE_GUIDE_X = -6798.3804f;
+    static constexpr float ZF_ENTRANCE_GUIDE_Y = -2895.9358f;
+    static constexpr float ZF_ENTRANCE_GUIDE_Z = 9.17488f;
+
+    static constexpr float ZF_PORTAL_GUIDE_X = -6796.5f;
+    static constexpr float ZF_PORTAL_GUIDE_Y = -2898.0f;
+    static constexpr float ZF_PORTAL_GUIDE_Z = 9.17488f;
+
+    static constexpr float ZF_PORTAL_X = -6801.0f;
+    static constexpr float ZF_PORTAL_Y = -2893.5f;
+    static constexpr float ZF_PORTAL_Z = 9.17488f;
+    static constexpr float ZF_PORTAL_O = 2.1502473f;
 
     static void RunCommand(Player* player, char const* command)
     {
@@ -273,6 +293,28 @@ namespace Frostforge
             return false;
 
         return creature->GetDistance(ULDAMAN_PORTAL_GUIDE_X, ULDAMAN_PORTAL_GUIDE_Y, ULDAMAN_PORTAL_GUIDE_Z) < 75.0f;
+    }
+
+    static bool IsZulFarrakEntranceGuide(Creature* creature)
+    {
+        if (!creature)
+            return false;
+
+        if (creature->GetMapId() != 1)
+            return false;
+
+        return creature->GetDistance(ZF_ENTRANCE_GUIDE_X, ZF_ENTRANCE_GUIDE_Y, ZF_ENTRANCE_GUIDE_Z) < 1.5f;
+    }
+
+    static bool IsZulFarrakPortalGuide(Creature* creature)
+    {
+        if (!creature)
+            return false;
+
+        if (creature->GetMapId() != 1)
+            return false;
+
+        return creature->GetDistance(ZF_PORTAL_GUIDE_X, ZF_PORTAL_GUIDE_Y, ZF_PORTAL_GUIDE_Z) < 1.5f;
     }
 
     static void TeleportGroup(Player* player, uint32 mapId, float x, float y, float z, float o)
@@ -471,6 +513,21 @@ namespace Frostforge
         ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Sending your group inside Uldaman.");
         TeleportGroup(player, MAP_ULDAMAN, ULDAMAN_INSIDE_X, ULDAMAN_INSIDE_Y, ULDAMAN_INSIDE_Z, ULDAMAN_INSIDE_O);
     }
+
+    static void SendGroupToZulFarrakPortal(Player* player)
+    {
+        if (player)
+            player->KilledMonsterCredit(NPC_FROSTFORGE_GUIDE);
+
+        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group is ready. Sending you to the Zul'Farrak portal.");
+        TeleportGroup(player, 1, ZF_PORTAL_X, ZF_PORTAL_Y, ZF_PORTAL_Z, ZF_PORTAL_O);
+    }
+
+    static void SendGroupInsideZulFarrak(Player* player)
+    {
+        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Sending your group inside Zul'Farrak.");
+        TeleportGroup(player, MAP_ZULFARRAK, ZF_INSIDE_X, ZF_INSIDE_Y, ZF_INSIDE_Z, ZF_INSIDE_O);
+    }
 }
 
 class frostforge_bot_group_gossip : public CreatureScript
@@ -527,6 +584,12 @@ public:
 
         if (Frostforge::IsUldamanPortalGuide(creature))
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Uldaman.", GOSSIP_SENDER_MAIN, 213);
+
+        if (Frostforge::IsZulFarrakEntranceGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group to the Zul'Farrak portal.", GOSSIP_SENDER_MAIN, 214);
+
+        if (Frostforge::IsZulFarrakPortalGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Zul'Farrak.", GOSSIP_SENDER_MAIN, 215);
 
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         return true;
@@ -616,6 +679,14 @@ public:
             case 213:
                 Frostforge::SendGroupInsideUldaman(player);
                 break;
+
+            case 214:
+                Frostforge::SendGroupToZulFarrakPortal(player);
+                break;
+
+            case 215:
+                Frostforge::SendGroupInsideZulFarrak(player);
+                break;                
 
             case 9000:
                 player->GetSession()->SendListInventory(creature->GetGUID());

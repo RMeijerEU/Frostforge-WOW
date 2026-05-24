@@ -9,6 +9,8 @@ namespace Frostforge
 {
     static constexpr uint32 NPC_FROSTFORGE_GUIDE = 900010;
 
+    static constexpr uint32 QUEST_ULDAMAN_GROUP = 900163;
+
     static constexpr uint32 MAP_RFC = 389;
 
     static constexpr uint32 MAP_WAILING_CAVERNS = 43;
@@ -130,9 +132,18 @@ namespace Frostforge
     static constexpr float SM_ENTRANCE_Y = -819.0f;
     static constexpr float SM_ENTRANCE_Z = 160.0f;
 
-    static constexpr float ULDAMAN_ENTRANCE_X = -6065.0f;
-    static constexpr float ULDAMAN_ENTRANCE_Y = -2955.0f;
-    static constexpr float ULDAMAN_ENTRANCE_Z = 209.0f;
+    static constexpr float ULDAMAN_CAVE_GUIDE_X = -6094.97f;
+    static constexpr float ULDAMAN_CAVE_GUIDE_Y = -3187.6858f;
+    static constexpr float ULDAMAN_CAVE_GUIDE_Z = 255.78978f;
+
+    static constexpr float ULDAMAN_PORTAL_GUIDE_X = -6069.0f;
+    static constexpr float ULDAMAN_PORTAL_GUIDE_Y = -2953.0f;
+    static constexpr float ULDAMAN_PORTAL_GUIDE_Z = 209.77402f;
+
+    static constexpr float ULDAMAN_PORTAL_X = -6067.4062f;
+    static constexpr float ULDAMAN_PORTAL_Y = -2950.7139f;
+    static constexpr float ULDAMAN_PORTAL_Z = 209.77402f;
+    static constexpr float ULDAMAN_PORTAL_O = 3.5902698f;
 
     static void RunCommand(Player* player, char const* command)
     {
@@ -242,7 +253,7 @@ namespace Frostforge
         return creature->GetDistance(SM_ENTRANCE_X, SM_ENTRANCE_Y, SM_ENTRANCE_Z) < 250.0f;
     }
 
-    static bool IsUldamanGuide(Creature* creature)
+    static bool IsUldamanCaveGuide(Creature* creature)
     {
         if (!creature)
             return false;
@@ -250,7 +261,18 @@ namespace Frostforge
         if (creature->GetMapId() != 0)
             return false;
 
-        return creature->GetDistance(ULDAMAN_ENTRANCE_X, ULDAMAN_ENTRANCE_Y, ULDAMAN_ENTRANCE_Z) < 250.0f;
+        return creature->GetDistance(ULDAMAN_CAVE_GUIDE_X, ULDAMAN_CAVE_GUIDE_Y, ULDAMAN_CAVE_GUIDE_Z) < 75.0f;
+    }
+
+    static bool IsUldamanPortalGuide(Creature* creature)
+    {
+        if (!creature)
+            return false;
+
+        if (creature->GetMapId() != 0)
+            return false;
+
+        return creature->GetDistance(ULDAMAN_PORTAL_GUIDE_X, ULDAMAN_PORTAL_GUIDE_Y, ULDAMAN_PORTAL_GUIDE_Z) < 75.0f;
     }
 
     static void TeleportGroup(Player* player, uint32 mapId, float x, float y, float z, float o)
@@ -435,6 +457,15 @@ namespace Frostforge
         TeleportGroup(player, MAP_SCARLET_MONASTERY, SM_CATH_INSIDE_X, SM_CATH_INSIDE_Y, SM_CATH_INSIDE_Z, SM_CATH_INSIDE_O);
     }
 
+    static void SendGroupToUldamanPortal(Player* player)
+    {
+        if (player)
+            player->KilledMonsterCredit(NPC_FROSTFORGE_GUIDE);
+
+        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group is ready. Sending you to the Uldaman vault entrance.");
+        TeleportGroup(player, 0, ULDAMAN_PORTAL_X, ULDAMAN_PORTAL_Y, ULDAMAN_PORTAL_Z, ULDAMAN_PORTAL_O);
+    }
+
     static void SendGroupInsideUldaman(Player* player)
     {
         ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Sending your group inside Uldaman.");
@@ -491,8 +522,11 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Cathedral.", GOSSIP_SENDER_MAIN, 211);
         }
 
-        if (Frostforge::IsUldamanGuide(creature))
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Uldaman.", GOSSIP_SENDER_MAIN, 212);
+        if (Frostforge::IsUldamanCaveGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group to the Uldaman entrance.", GOSSIP_SENDER_MAIN, 212);
+
+        if (Frostforge::IsUldamanPortalGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Uldaman.", GOSSIP_SENDER_MAIN, 213);
 
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         return true;
@@ -576,6 +610,10 @@ public:
                 break;
 
             case 212:
+                Frostforge::SendGroupToUldamanPortal(player);
+                break;
+
+            case 213:
                 Frostforge::SendGroupInsideUldaman(player);
                 break;
 

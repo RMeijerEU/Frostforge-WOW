@@ -56,8 +56,7 @@ local function OnUldamanQuestAccept(event, player, quest)
     end
 
     if questId == Q.ULDAMAN_GROUP then
-        C.SendEldrinMessage(player, "Travel to the Badlands and prepare for Uldaman. The vault is guarded by stone, memory, and the failed children of forgotten experiments.")
-        C.TeleportToLocation(player, L.ULDAMAN_STAGING)
+        C.SendEldrinMessage(player, "Gather your party at the Uldaman meeting stone, then follow the path toward the cave. Speak with the Frostforge Guide when your group is ready to move to the vault entrance.")
         return
     end
 

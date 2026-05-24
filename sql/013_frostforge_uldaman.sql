@@ -2,6 +2,7 @@
 -- Act XII: Uldaman
 
 SET @ELDRIN := 900011;
+SET @GUIDE  := 900010;
 
 SET @NPC_RELIQUARY_EXPLORER := 900060;
 SET @NPC_STONEWATCHER       := 900061;
@@ -23,6 +24,15 @@ DELETE FROM quest_template WHERE ID BETWEEN 900160 AND 900179;
 DELETE FROM creature WHERE id1 BETWEEN 900060 AND 900069;
 DELETE FROM creature_template_model WHERE CreatureID BETWEEN 900060 AND 900069;
 DELETE FROM creature_template WHERE entry BETWEEN 900060 AND 900069;
+
+-- Clean up Uldaman-specific existing guide/Eldrin staging spawns.
+DELETE FROM creature
+WHERE Comment IN (
+  'Frostforge Uldaman Archivist Eldrin',
+  'Frostforge Uldaman Cave Guide',
+  'Frostforge Uldaman Portal Archivist Eldrin',
+  'Frostforge Uldaman Portal Guide'
+);
 
 INSERT INTO creature_template
 (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, name, subname, IconName, gossip_menu_id,
@@ -48,17 +58,14 @@ VALUES
 
 -- Display IDs:
 -- 1597 = dwarf-style explorer/defector model already used in the project.
--- 6932 = irradiated/gnome-ish technical model already used; replace later if desired.
+-- 6932 = technical/gnome-ish model already used; replace later if desired.
 INSERT INTO creature_template_model
 (CreatureID, Idx, CreatureDisplayID, DisplayScale, Probability, VerifiedBuild)
 VALUES
 (@NPC_RELIQUARY_EXPLORER, 0, 1597, 1, 1, 0),
 (@NPC_STONEWATCHER, 0, 6932, 1, 1, 0);
 
--- Uldaman staging near the Badlands meeting stone.
--- Safe location from .gps:
--- Map 0, Zone 3, Area 1897, GroundZ/FloorZ 258.62.
--- Uldaman staging near the Badlands meeting stone.
+-- Uldaman story NPCs near the Badlands meeting stone.
 -- Safe location from .gps:
 -- Map 0, Zone 3, Area 1897, GroundZ/FloorZ around 258.62.
 INSERT INTO creature
@@ -72,21 +79,37 @@ VALUES
 
 (@NPC_STONEWATCHER, 0, 0, 0, 3, 1897, 1, 1, 0,
  -6114.7305, -3287.094, 258.6213, 5.7705, 300, 0, 0,
- 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Stonewatcher');
+ 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Stonewatcher'),
 
- -- Uldaman Archivist Eldrin near the meeting stone.
-DELETE FROM creature
-WHERE id1 = @ELDRIN
-  AND Comment = 'Frostforge Uldaman Archivist Eldrin';
+(@ELDRIN, 0, 0, 0, 3, 1897, 1, 1, 0,
+ -6119.0, -3291.0, 258.6213, 5.7705, 300, 0, 0,
+ 1000, 0, 0, 3, 0, 0, '', NULL, 0, 'Frostforge Uldaman Archivist Eldrin');
 
+-- Uldaman cave guide.
+-- This guide is used by "Into the Badlands" and should send the group toward the Uldaman portal route.
 INSERT INTO creature
 (id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
  position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
  curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, ScriptName, VerifiedBuild, CreateObject, Comment)
 VALUES
-(@ELDRIN, 0, 0, 0, 3, 1897, 1, 1, 0,
- -6119.0, -3291.0, 258.6213, 5.7705, 300, 0, 0,
- 1000, 0, 0, 3, 0, 0, '', NULL, 0, 'Frostforge Uldaman Archivist Eldrin');
+(@GUIDE, 0, 0, 0, 3, 1897, 1, 1, 0,
+ -6094.97, -3187.6858, 255.78978, 5.12886, 300, 0, 0,
+ 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Cave Guide');
+
+-- Uldaman portal staging.
+-- Safe player-tested location just before the instance portal.
+INSERT INTO creature
+(id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
+ position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
+ curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, ScriptName, VerifiedBuild, CreateObject, Comment)
+VALUES
+(@ELDRIN, 0, 0, 0, 1337, 1337, 1, 1, 0,
+ -6067.4062, -2950.7139, 209.77402, 3.5902698, 300, 0, 0,
+ 1000, 0, 0, 3, 0, 0, '', NULL, 0, 'Frostforge Uldaman Portal Archivist Eldrin'),
+
+(@GUIDE, 0, 0, 0, 1337, 1337, 1, 1, 0,
+ -6069.0, -2953.0, 209.77402, 3.5902698, 300, 0, 0,
+ 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Portal Guide');
 
 INSERT INTO quest_template
 (ID, QuestType, QuestLevel, MinLevel, QuestSortID, QuestInfoID, SuggestedGroupNum,
@@ -111,11 +134,11 @@ Before the next dungeon, learn why the Badlands hide one of the most important r
 (@Q_DWARVEN_ORIGINS, 2, 41, 37, 130, 0, 0,
  0, 0, 10000, 0,
  'The First Dwarves',
- 'Speak with the Frostforge Reliquary Explorer near Uldaman.',
+ 'Speak with the Frostforge Reliquary Explorer near the Uldaman meeting stone.',
  'The dwarves search Uldaman for the truth of their beginning. Old songs speak of stone, awakening, and a past before Ironforge. The Reliquary expedition believes those stories are not myths at all.
 
-Travel to Uldaman and speak with the Frostforge Reliquary Explorer.',
- '', 'Return to Archivist Eldrin after speaking with the Reliquary Explorer.',
+Travel to the Uldaman meeting stone in the Badlands and speak with the Frostforge Reliquary Explorer.',
+ '', 'Return to Archivist Eldrin at the Uldaman meeting stone.',
  @NPC_RELIQUARY_EXPLORER, 0, 0, 0,
  1, 0, 0, 0,
  'Reliquary Explorer consulted', '', '', '', NULL),
@@ -123,11 +146,11 @@ Travel to Uldaman and speak with the Frostforge Reliquary Explorer.',
 (@Q_TROGG_WARNING, 2, 42, 37, 130, 0, 0,
  0, 0, 10000, 0,
  'The Trogg Warning',
- 'Speak with the Frostforge Stonewatcher near Uldaman.',
+ 'Speak with the Frostforge Stonewatcher near the Uldaman meeting stone.',
  'The troggs are often treated as pests, but Uldaman suggests something worse. They are tied to the same ancient history as the earthen, proof that creation can fail and that old vaults can preserve old mistakes.
 
-Speak with the Frostforge Stonewatcher and learn what the troggs reveal about Titan works.',
- '', 'Return to Archivist Eldrin after speaking with the Stonewatcher.',
+Speak with the Frostforge Stonewatcher near the meeting stone and learn what the troggs reveal about Titan works.',
+ '', 'Return to Archivist Eldrin at the Uldaman meeting stone.',
  @NPC_STONEWATCHER, 0, 0, 0,
  1, 0, 0, 0,
  'Stonewatcher consulted', '', '', '', NULL),
@@ -135,20 +158,20 @@ Speak with the Frostforge Stonewatcher and learn what the troggs reveal about Ti
 (@Q_GROUP, 2, 43, 37, 130, 0, 0,
  0, 0, 10000, 0,
  'Into the Badlands',
- 'Prepare to enter Uldaman.',
+ 'Gather your party and speak with the Frostforge Guide near the Uldaman cave entrance.',
  'You now know enough to understand the danger. Uldaman is not only a ruin and not only a dungeon. It is a record of Azeroth before mortal history.
 
-Gather your party and prepare to enter the vault.',
- '', 'Return to Archivist Eldrin when you are ready for Uldaman.',
- 0, 0, 0, 0,
- 0, 0, 0, 0,
- '', '', '', '', NULL),
+Gather your party at the Uldaman meeting stone, then follow the path toward the cave entrance. When your group is ready, speak with the Frostforge Guide near the cave. The guide will move your group toward the vault entrance.',
+ '', 'Meet Archivist Eldrin near the Uldaman instance portal.',
+ @GUIDE, 0, 0, 0,
+ 1, 0, 0, 0,
+ 'Frostforge Guide consulted', '', '', '', NULL),
 
 (@Q_DUNGEON, 2, 45, 37, 130, 0, 5,
  0, 0, 20000, 0,
  'The Frostforge Path: Uldaman',
  'Enter Uldaman and defeat Archaedas.',
- 'At the heart of Uldaman waits Archaedas, an ancient guardian of Titan stone and buried memory. Defeating him will not answer every question, but it will open the campaign to a much older truth: Azeroth was shaped, watched, and wounded long before the Horde and Alliance existed.
+ 'The vault entrance lies before you. Beyond it waits Archaedas, an ancient guardian of Titan stone and buried memory. Defeating him will not answer every question, but it will open the campaign to a much older truth: Azeroth was shaped, watched, and wounded long before the Horde and Alliance existed.
 
 Enter Uldaman and defeat Archaedas.',
  '', 'Return to Archivist Eldrin after defeating Archaedas.',

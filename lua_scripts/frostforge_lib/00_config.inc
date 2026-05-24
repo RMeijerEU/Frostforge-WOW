@@ -434,10 +434,10 @@ Frostforge.Location = {
 
     ULDAMAN_STAGING = {
         map = 0,
-        x = -6065.0,
-        y = -2955.0,
-        z = 209.0,
-        o = 0.7
+        x = -6116.7305,
+        y = -3289.094,
+        z = 258.6213,
+        o = 5.77053
     },
 
     ULDAMAN_INSIDE = {

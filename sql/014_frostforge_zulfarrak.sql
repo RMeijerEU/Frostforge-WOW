@@ -68,12 +68,13 @@ VALUES
  0, 0, 1, 0, 0, '', NULL);
 
 -- Model copies from existing, known creatures.
--- Chronicler: copy Archivist Eldrin model.
+-- Chronicler: copy a Gadgetzan goblin model.
 INSERT INTO creature_template_model
 (CreatureID, Idx, CreatureDisplayID, DisplayScale, Probability, VerifiedBuild)
 SELECT @NPC_TANARIS_CHRONICLER, src.Idx, src.CreatureDisplayID, src.DisplayScale, src.Probability, 0
 FROM creature_template_model src
-WHERE src.CreatureID = @ELDRIN
+WHERE src.CreatureID IN (7564, 7583, 7733, 8123, 9460)
+ORDER BY FIELD(src.CreatureID, 7564, 7583, 7733, 8123, 9460)
 LIMIT 1;
 
 -- Sandfury Exile: copy Sandfury Witch Doctor model.

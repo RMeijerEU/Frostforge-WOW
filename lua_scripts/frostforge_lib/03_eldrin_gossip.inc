@@ -202,14 +202,12 @@ local function AddActIVAndBeyondOptions(player, creature)
         player:GossipMenuAddItem(0, "Send me to Uldaman.", 0, 510)
     end
 
-    local needsZulFarrakTravel =
-        (player:HasQuest(Q.ZF_SANDS_OF_TANARIS) and not player:GetQuestRewardStatus(Q.ZF_SANDS_OF_TANARIS))
-        or (player:HasQuest(Q.ZF_SANDFURY_EMPIRE) and not player:GetQuestRewardStatus(Q.ZF_SANDFURY_EMPIRE))
-        or (player:HasQuest(Q.ZF_RELICS_IN_THE_SAND) and not player:GetQuestRewardStatus(Q.ZF_RELICS_IN_THE_SAND))
-        or (player:HasQuest(Q.ZF_GROUP) and not player:GetQuestRewardStatus(Q.ZF_GROUP))
+    local needsTanarisTravel =
+        player:HasQuest(Q.ZF_SANDS_OF_TANARIS)
+        and not player:GetQuestRewardStatus(Q.ZF_SANDS_OF_TANARIS)
 
-    if needsZulFarrakTravel then
-        player:GossipMenuAddItem(0, "Send me to Zul'Farrak.", 0, 511)
+    if needsTanarisTravel then
+        player:GossipMenuAddItem(0, "Send me to Gadgetzan.", 0, 511)
     end
 end
 
@@ -653,7 +651,7 @@ local function OnEldrinGossipSelect(event, player, creature, sender, intid, code
     end
 
     if intid == 511 then
-        U.SendEldrinMessage(player, "I will send you to Tanaris. The desert looks empty, but old empires leave deep tracks in the sand.")
+        U.SendEldrinMessage(player, "I will send you to Gadgetzan. From there, follow the desert road south toward Zul'Farrak.")
         player:GossipComplete()
 
         U.TeleportPlayerGroup(

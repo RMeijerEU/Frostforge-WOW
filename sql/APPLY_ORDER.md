@@ -22,6 +22,7 @@ Suggested structure:
     010_frostforge_scarlet_missing_npcs.sql
     011_frostforge_custom_npc_models.sql
     012_frostforge_story_npc_positions.sql
+    013_frostforge_uldaman.sql
 
 ## Apply Example
 

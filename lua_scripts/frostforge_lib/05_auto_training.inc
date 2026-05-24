@@ -1,11 +1,78 @@
 -- Frostforge Auto Training
--- Keeps player skills and class spells updated when Frostforge changes player level.
+-- Keeps player skills, class spells, riding and campaign mounts updated when Frostforge changes player level.
 
 Frostforge = Frostforge or {}
 Frostforge.AutoTraining = Frostforge.AutoTraining or {}
 
 local U = Frostforge.Utils
 local Starter = Frostforge.StarterGear
+
+local SPELL_APPRENTICE_RIDING = 33388
+local SPELL_JOURNEYMAN_RIDING = 33391
+
+-- Neutral TCG mounts, usable as campaign convenience mounts.
+-- Replace these later if you prefer faction/race-specific mounts.
+local ITEM_REINS_OF_THE_SPECTRAL_TIGER = 33224
+local ITEM_REINS_OF_THE_SWIFT_SPECTRAL_TIGER = 33225
+
+local function LearnSpellSafe(player, spellId)
+    if not player or not spellId then
+        return false
+    end
+
+    if player:HasSpell(spellId) then
+        return false
+    end
+
+    player:LearnSpell(spellId)
+    return true
+end
+
+local function AddItemOnce(player, itemId)
+    if not player or not itemId then
+        return false
+    end
+
+    if player:HasItem(itemId, 1) then
+        return false
+    end
+
+    player:AddItem(itemId, 1)
+    return true
+end
+
+local function LearnRidingAndMounts(player, showMessage)
+    if not player then
+        return
+    end
+
+    local level = player:GetLevel()
+    local changed = false
+
+    if level >= 20 then
+        if LearnSpellSafe(player, SPELL_APPRENTICE_RIDING) then
+            changed = true
+        end
+
+        if AddItemOnce(player, ITEM_REINS_OF_THE_SPECTRAL_TIGER) then
+            changed = true
+        end
+    end
+
+    if level >= 40 then
+        if LearnSpellSafe(player, SPELL_JOURNEYMAN_RIDING) then
+            changed = true
+        end
+
+        if AddItemOnce(player, ITEM_REINS_OF_THE_SWIFT_SPECTRAL_TIGER) then
+            changed = true
+        end
+    end
+
+    if changed and showMessage then
+        U.SendGuideMessage(player, "Your riding skill and campaign mount access have been updated.")
+    end
+end
 
 local function TrainPlayerForCurrentLevel(player, showMessage)
     if not player then
@@ -53,6 +120,8 @@ local function TrainPlayerForCurrentLevel(player, showMessage)
     if level >= 40 and Training and Training.LearnLevel40ClassSpells then
         Training.LearnLevel40ClassSpells(player)
     end
+
+    LearnRidingAndMounts(player, showMessage)
 
     if showMessage then
         U.SendGuideMessage(player, "Your class training and weapon skills have been updated for level " .. level .. ".")

@@ -10,7 +10,7 @@ local function OnUldamanQuestAccept(event, player, quest)
     local questId = C.GetQuestId(quest)
 
     if questId == Q.ULDAMAN_TITAN_ECHOES then
-        C.SendEldrinMessage(player, "The Scarlet Monastery showed what fear can do to the living. Uldaman is older than fear, older than kingdoms, and older than the wars of Horde and Alliance. The next path leads into Titan history.")
+        C.SendEldrinMessage(player, "The Scarlet Monastery showed what fear can do to the living. Uldaman is older than kingdoms, older than Horde and Alliance, and older than mortal history. The Titans were ancient, godlike world-shapers who ordered Azeroth long before the races of today understood the world beneath their feet.")
         return
     end
 
@@ -52,23 +52,33 @@ local function OnUldamanQuestReward(event, player, quest, opt)
 end
 
 local function OnReliquaryExplorerGossipHello(event, player, creature)
+    creature:SendUnitSay(
+        "Uldaman is Titan work. Older than Ironforge. Older than the kingdoms of men.",
+        0
+    )
+
     C.SimpleObjectiveGossipHello(
         player,
         creature,
         Q.ULDAMAN_DWARVEN_ORIGINS,
         NPC.ULDAMAN_RELIQUARY_EXPLORER,
-        "The Reliquary Explorer says: The deeper we dig, the less this looks like a dwarven ruin. Uldaman is Titan work. The earthen came before the dwarves, shaped from stone and purpose. Somewhere between then and now, flesh entered the story.",
+        "The Reliquary Explorer says: Uldaman is not simply a dwarven ruin. It is Titan work. The Titans were ancient, godlike world-shapers who ordered Azeroth long before mortal history began. Their vaults were not temples, but records, laboratories, safeguards, and prisons. The earthen came before the dwarves, shaped from stone and purpose. Somewhere between then and now, flesh entered the story.",
         "What did the dwarves find here?"
     )
 end
 
 local function OnStonewatcherGossipHello(event, player, creature)
+    creature:SendUnitSay(
+        "The troggs are not merely cave beasts. They are a broken echo of creation.",
+        0
+    )
+
     C.SimpleObjectiveGossipHello(
         player,
         creature,
         Q.ULDAMAN_TROGG_WARNING,
         NPC.ULDAMAN_STONEWATCHER,
-        "The Stonewatcher says: The troggs are not an accident to ignore. They are a broken echo of creation. If the Titans shaped this world, then Uldaman proves even their works could fracture.",
+        "The Stonewatcher says: The troggs are not an accident to ignore. They are a warning from an older age: creation without balance, stone without wisdom, life twisted before it ever had a name. If the Titans shaped this world, then Uldaman proves even their works could fracture.",
         "What do the troggs mean?"
     )
 end

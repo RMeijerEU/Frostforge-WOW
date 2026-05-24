@@ -55,18 +55,23 @@ VALUES
 (@NPC_RELIQUARY_EXPLORER, 0, 1597, 1, 1, 0),
 (@NPC_STONEWATCHER, 0, 6932, 1, 1, 0);
 
--- Uldaman staging near Badlands entrance.
+-- Uldaman staging near the Badlands meeting stone.
+-- Safe location from .gps:
+-- Map 0, Zone 3, Area 1897, GroundZ/FloorZ 258.62.
+-- Uldaman staging near the Badlands meeting stone.
+-- Safe location from .gps:
+-- Map 0, Zone 3, Area 1897, GroundZ/FloorZ around 258.62.
 INSERT INTO creature
 (id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
  position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
  curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, ScriptName, VerifiedBuild, CreateObject, Comment)
 VALUES
-(@NPC_RELIQUARY_EXPLORER, 0, 0, 0, 3, 0, 1, 1, 0,
- -6062.0, -2952.0, 209.0, 1.1, 300, 0, 0,
+(@NPC_RELIQUARY_EXPLORER, 0, 0, 0, 3, 1897, 1, 1, 0,
+ -6116.4985, -3289.6699, 258.5957, 0.1667, 300, 0, 0,
  1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Reliquary Explorer'),
 
-(@NPC_STONEWATCHER, 0, 0, 0, 3, 0, 1, 1, 0,
- -6068.0, -2958.0, 209.0, 0.3, 300, 0, 0,
+(@NPC_STONEWATCHER, 0, 0, 0, 3, 1897, 1, 1, 0,
+ -6114.7305, -3287.094, 258.6213, 5.7705, 300, 0, 0,
  1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Stonewatcher');
 
 INSERT INTO quest_template

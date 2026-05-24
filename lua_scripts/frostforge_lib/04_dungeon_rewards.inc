@@ -1026,6 +1026,91 @@ function Frostforge.Rewards.GiveUldamanClassReward(player)
 end
 
 -- ============================================================
+-- Act XIII — Zul'Farrak rewards
+-- ============================================================
+
+local ZF_GAHZRILLA_FANG = 9467
+local ZF_GAHZRILLA_SCALE_ARMOR = 9469
+local ZF_BAD_MOJO_MASK = 9470
+local ZF_JINXED_HOODOO_SKIN = 9473
+local ZF_DIABOLIC_SKIVER = 9475
+local ZF_BIG_BAD_PAULDRONS = 9476
+local ZF_RIPSAW = 9478
+local ZF_EYEGOUGER = 9480
+local ZF_WITCH_DOCTORS_CANE = 9482
+local ZF_FLAMING_INCINERATOR = 9483
+local ZF_SPELLSHOCK_LEGGINGS = 9484
+
+local ZF_CLASS_REWARDS = {
+    [C.WARRIOR] = {
+        {ZF_RIPSAW},
+        {ZF_BIG_BAD_PAULDRONS},
+        {ZF_GAHZRILLA_SCALE_ARMOR},
+        {ZF_GAHZRILLA_FANG}
+    },
+
+    [C.PALADIN] = {
+        {ZF_RIPSAW},
+        {ZF_BIG_BAD_PAULDRONS},
+        {ZF_GAHZRILLA_SCALE_ARMOR},
+        {ZF_GAHZRILLA_FANG}
+    },
+
+    [C.HUNTER] = {
+        {ZF_EYEGOUGER},
+        {ZF_BIG_BAD_PAULDRONS},
+        {ZF_GAHZRILLA_SCALE_ARMOR},
+        {ZF_GAHZRILLA_FANG}
+    },
+
+    [C.ROGUE] = {
+        {ZF_DIABOLIC_SKIVER},
+        {ZF_EYEGOUGER},
+        {ZF_JINXED_HOODOO_SKIN},
+        {ZF_GAHZRILLA_FANG}
+    },
+
+    [C.PRIEST] = {
+        {ZF_WITCH_DOCTORS_CANE},
+        {ZF_BAD_MOJO_MASK},
+        {ZF_SPELLSHOCK_LEGGINGS},
+        {ZF_JINXED_HOODOO_SKIN}
+    },
+
+    [C.SHAMAN] = {
+        {ZF_WITCH_DOCTORS_CANE},
+        {ZF_FLAMING_INCINERATOR},
+        {ZF_BIG_BAD_PAULDRONS},
+        {ZF_GAHZRILLA_FANG}
+    },
+
+    [C.MAGE] = {
+        {ZF_WITCH_DOCTORS_CANE},
+        {ZF_BAD_MOJO_MASK},
+        {ZF_SPELLSHOCK_LEGGINGS},
+        {ZF_JINXED_HOODOO_SKIN}
+    },
+
+    [C.WARLOCK] = {
+        {ZF_WITCH_DOCTORS_CANE},
+        {ZF_BAD_MOJO_MASK},
+        {ZF_SPELLSHOCK_LEGGINGS},
+        {ZF_JINXED_HOODOO_SKIN}
+    },
+
+    [C.DRUID] = {
+        {ZF_WITCH_DOCTORS_CANE},
+        {ZF_JINXED_HOODOO_SKIN},
+        {ZF_GAHZRILLA_SCALE_ARMOR},
+        {ZF_GAHZRILLA_FANG}
+    }
+}
+
+function Frostforge.Rewards.GiveZFClassReward(player)
+    Frostforge.Rewards.GiveDungeonClassReward(player, ZF_CLASS_REWARDS, "Zul'Farrak")
+end
+
+-- ============================================================
 -- Reward helpers
 -- ============================================================
 

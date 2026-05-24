@@ -201,6 +201,14 @@ local function AddActIVAndBeyondOptions(player, creature)
     if needsUldamanTravel then
         player:GossipMenuAddItem(0, "Send me to Uldaman.", 0, 510)
     end
+
+    local needsTanarisTravel =
+        player:HasQuest(Q.ZF_SANDS_OF_TANARIS)
+        and not player:GetQuestRewardStatus(Q.ZF_SANDS_OF_TANARIS)
+
+    if needsTanarisTravel then
+        player:GossipMenuAddItem(0, "Send me to Gadgetzan.", 0, 511)
+    end
 end
 
 local function CreditEldrinTravelObjectives(player, creature)
@@ -638,6 +646,21 @@ local function OnEldrinGossipSelect(event, player, creature, sender, intid, code
             L.ULDAMAN_STAGING.y,
             L.ULDAMAN_STAGING.z,
             L.ULDAMAN_STAGING.o
+        )
+        return
+    end
+
+    if intid == 511 then
+        U.SendEldrinMessage(player, "I will send you to Gadgetzan. From there, follow the desert road south toward Zul'Farrak.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.ZF_GADGETZAN.map,
+            L.ZF_GADGETZAN.x,
+            L.ZF_GADGETZAN.y,
+            L.ZF_GADGETZAN.z,
+            L.ZF_GADGETZAN.o
         )
         return
     end

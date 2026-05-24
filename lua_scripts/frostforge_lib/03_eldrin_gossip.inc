@@ -183,8 +183,23 @@ local function AddActIVAndBeyondOptions(player, creature)
         player:GossipMenuAddItem(0, "Send me back to Razorfen Kraul.", 0, 508)
     end
 
-    if player:HasQuest(Q.SM_ROAD) and not player:GetQuestRewardStatus(Q.SM_ROAD) then
+    local needsScarletTravel =
+        (player:HasQuest(Q.SM_RED_STANDARD) and not player:GetQuestRewardStatus(Q.SM_RED_STANDARD))
+        or (player:HasQuest(Q.SM_FAITH_WITHOUT_MERCY) and not player:GetQuestRewardStatus(Q.SM_FAITH_WITHOUT_MERCY))
+        or (player:HasQuest(Q.SM_ROAD) and not player:GetQuestRewardStatus(Q.SM_ROAD))
+
+    if needsScarletTravel then
         player:GossipMenuAddItem(0, "Send me to Scarlet Monastery.", 0, 509)
+    end
+
+    local needsUldamanTravel =
+        (player:HasQuest(Q.ULDAMAN_TITAN_ECHOES) and not player:GetQuestRewardStatus(Q.ULDAMAN_TITAN_ECHOES))
+        or (player:HasQuest(Q.ULDAMAN_DWARVEN_ORIGINS) and not player:GetQuestRewardStatus(Q.ULDAMAN_DWARVEN_ORIGINS))
+        or (player:HasQuest(Q.ULDAMAN_TROGG_WARNING) and not player:GetQuestRewardStatus(Q.ULDAMAN_TROGG_WARNING))
+        or (player:HasQuest(Q.ULDAMAN_GROUP) and not player:GetQuestRewardStatus(Q.ULDAMAN_GROUP))
+
+    if needsUldamanTravel then
+        player:GossipMenuAddItem(0, "Send me to Uldaman.", 0, 510)
     end
 end
 
@@ -280,7 +295,6 @@ local function CreditEldrinTravelObjectives(player, creature)
             if not player:CanCompleteQuest(rule.quest) then
                 player:AreaExploredOrEventHappens(rule.quest)
             end
-
         end
     end
 end
@@ -609,6 +623,21 @@ local function OnEldrinGossipSelect(event, player, creature, sender, intid, code
             L.SM_STAGING.y,
             L.SM_STAGING.z,
             L.SM_STAGING.o
+        )
+        return
+    end
+
+    if intid == 510 then
+        U.SendEldrinMessage(player, "I will send you to Uldaman. The Badlands remember older truths than any kingdom.")
+        player:GossipComplete()
+
+        U.TeleportPlayerGroup(
+            player,
+            L.ULDAMAN_STAGING.map,
+            L.ULDAMAN_STAGING.x,
+            L.ULDAMAN_STAGING.y,
+            L.ULDAMAN_STAGING.z,
+            L.ULDAMAN_STAGING.o
         )
         return
     end

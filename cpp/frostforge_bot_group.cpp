@@ -27,6 +27,8 @@ namespace Frostforge
 
     static constexpr uint32 MAP_SCARLET_MONASTERY = 189;
 
+    static constexpr uint32 MAP_ULDAMAN = 70;
+
     static constexpr float RFC_INSIDE_X = 5.835333f;
     static constexpr float RFC_INSIDE_Y = -25.63047f;
     static constexpr float RFC_INSIDE_Z = -20.681316f;
@@ -87,6 +89,11 @@ namespace Frostforge
     static constexpr float SM_CATH_INSIDE_Z = 18.67f;
     static constexpr float SM_CATH_INSIDE_O = 0.00f;
 
+    static constexpr float ULDAMAN_INSIDE_X = -228.19f;
+    static constexpr float ULDAMAN_INSIDE_Y = 46.16f;
+    static constexpr float ULDAMAN_INSIDE_Z = -46.02f;
+    static constexpr float ULDAMAN_INSIDE_O = 1.57f;
+
     static constexpr float RFC_ENTRANCE_X = 1811.78f;
     static constexpr float RFC_ENTRANCE_Y = -4410.50f;
     static constexpr float RFC_ENTRANCE_Z = -18.47f;
@@ -122,6 +129,10 @@ namespace Frostforge
     static constexpr float SM_ENTRANCE_X = 2871.0f;
     static constexpr float SM_ENTRANCE_Y = -819.0f;
     static constexpr float SM_ENTRANCE_Z = 160.0f;
+
+    static constexpr float ULDAMAN_ENTRANCE_X = -6065.0f;
+    static constexpr float ULDAMAN_ENTRANCE_Y = -2955.0f;
+    static constexpr float ULDAMAN_ENTRANCE_Z = 209.0f;
 
     static void RunCommand(Player* player, char const* command)
     {
@@ -166,7 +177,7 @@ namespace Frostforge
     }
 
     static bool IsStockadesGuide(Creature* creature)
-     {
+    {
         if (!creature)
             return false;
 
@@ -176,7 +187,7 @@ namespace Frostforge
         return creature->GetDistance(STOCKADES_ENTRANCE_X, STOCKADES_ENTRANCE_Y, STOCKADES_ENTRANCE_Z) < 75.0f;
     }
 
-        static bool IsShadowfangKeepGuide(Creature* creature)
+    static bool IsShadowfangKeepGuide(Creature* creature)
     {
         if (!creature)
             return false;
@@ -231,6 +242,17 @@ namespace Frostforge
         return creature->GetDistance(SM_ENTRANCE_X, SM_ENTRANCE_Y, SM_ENTRANCE_Z) < 250.0f;
     }
 
+    static bool IsUldamanGuide(Creature* creature)
+    {
+        if (!creature)
+            return false;
+
+        if (creature->GetMapId() != 0)
+            return false;
+
+        return creature->GetDistance(ULDAMAN_ENTRANCE_X, ULDAMAN_ENTRANCE_Y, ULDAMAN_ENTRANCE_Z) < 250.0f;
+    }
+
     static void TeleportGroup(Player* player, uint32 mapId, float x, float y, float z, float o)
     {
         if (!player)
@@ -256,84 +278,84 @@ namespace Frostforge
     }
 
     static void AddClassIfNotPlayer(Player* player, uint8 playerClass, uint8 botClass, char const* className)
-{
-    if (!player)
-        return;
-
-    if (playerClass == botClass)
-        return;
-
-    std::string command = ".playerbots bot addclass ";
-    command += className;
-
-    RunCommand(player, command.c_str());
-}
-
-static void MakeGroupFromList(Player* player, std::vector<std::pair<uint8, char const*>> const& classes, char const* label)
-{
-    if (!player)
-        return;
-
-    uint8 playerClass = player->getClass();
-    uint8 added = 0;
-
-    for (auto const& entry : classes)
     {
-        if (added >= 4)
-            break;
+        if (!player)
+            return;
 
-        if (entry.first == playerClass)
-            continue;
+        if (playerClass == botClass)
+            return;
 
-        AddClassIfNotPlayer(player, playerClass, entry.first, entry.second);
-        ++added;
+        std::string command = ".playerbots bot addclass ";
+        command += className;
+
+        RunCommand(player, command.c_str());
     }
 
-    ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r %s group requested.", label);
-}
-
-static void MakeTankGroup(Player* player)
-{
-    MakeGroupFromList(player,
+    static void MakeGroupFromList(Player* player, std::vector<std::pair<uint8, char const*>> const& classes, char const* label)
     {
-        {5, "priest"},
-        {8, "mage"},
-        {3, "hunter"},
-        {4, "rogue"},
-        {9, "warlock"},
-        {7, "shaman"}
-    },
-    "Tank");
-}
+        if (!player)
+            return;
 
-static void MakeDamageGroup(Player* player)
-{
-    MakeGroupFromList(player,
-    {
-        {1, "warrior"},
-        {5, "priest"},
-        {8, "mage"},
-        {3, "hunter"},
-        {4, "rogue"},
-        {9, "warlock"},
-        {7, "shaman"}
-    },
-    "Damage");
-}
+        uint8 playerClass = player->getClass();
+        uint8 added = 0;
 
-static void MakeHealerGroup(Player* player)
-{
-    MakeGroupFromList(player,
+        for (auto const& entry : classes)
+        {
+            if (added >= 4)
+                break;
+
+            if (entry.first == playerClass)
+                continue;
+
+            AddClassIfNotPlayer(player, playerClass, entry.first, entry.second);
+            ++added;
+        }
+
+        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r %s group requested.", label);
+    }
+
+    static void MakeTankGroup(Player* player)
     {
-        {1, "warrior"},
-        {8, "mage"},
-        {3, "hunter"},
-        {4, "rogue"},
-        {9, "warlock"},
-        {7, "shaman"}
-    },
-    "Healer");
-}
+        MakeGroupFromList(player,
+        {
+            {5, "priest"},
+            {8, "mage"},
+            {3, "hunter"},
+            {4, "rogue"},
+            {9, "warlock"},
+            {7, "shaman"}
+        },
+        "Tank");
+    }
+
+    static void MakeDamageGroup(Player* player)
+    {
+        MakeGroupFromList(player,
+        {
+            {1, "warrior"},
+            {5, "priest"},
+            {8, "mage"},
+            {3, "hunter"},
+            {4, "rogue"},
+            {9, "warlock"},
+            {7, "shaman"}
+        },
+        "Damage");
+    }
+
+    static void MakeHealerGroup(Player* player)
+    {
+        MakeGroupFromList(player,
+        {
+            {1, "warrior"},
+            {8, "mage"},
+            {3, "hunter"},
+            {4, "rogue"},
+            {9, "warlock"},
+            {7, "shaman"}
+        },
+        "Healer");
+    }
 
     static void RemoveBotGroup(Player* player)
     {
@@ -413,6 +435,11 @@ static void MakeHealerGroup(Player* player)
         TeleportGroup(player, MAP_SCARLET_MONASTERY, SM_CATH_INSIDE_X, SM_CATH_INSIDE_Y, SM_CATH_INSIDE_Z, SM_CATH_INSIDE_O);
     }
 
+    static void SendGroupInsideUldaman(Player* player)
+    {
+        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Sending your group inside Uldaman.");
+        TeleportGroup(player, MAP_ULDAMAN, ULDAMAN_INSIDE_X, ULDAMAN_INSIDE_Y, ULDAMAN_INSIDE_Z, ULDAMAN_INSIDE_O);
+    }
 }
 
 class frostforge_bot_group_gossip : public CreatureScript
@@ -429,40 +456,43 @@ public:
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as damage. Make me a group.", GOSSIP_SENDER_MAIN, 101);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as healer. Make me a group.", GOSSIP_SENDER_MAIN, 102);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Remove my Playerbot group.", GOSSIP_SENDER_MAIN, 103);
-	AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How do I control my bots in dungeons?", GOSSIP_SENDER_MAIN, 104);
-	AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Show me supplies.", GOSSIP_SENDER_MAIN, 9000);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How do I control my bots in dungeons?", GOSSIP_SENDER_MAIN, 104);
+        AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Show me supplies.", GOSSIP_SENDER_MAIN, 9000);
 
         if (Frostforge::IsRagefireEntranceGuide(creature))
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Ragefire Chasm.", GOSSIP_SENDER_MAIN, 200);
 
-	if (Frostforge::IsWailingCavernsGuide(creature))
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Wailing Caverns.", GOSSIP_SENDER_MAIN, 201);
+        if (Frostforge::IsWailingCavernsGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Wailing Caverns.", GOSSIP_SENDER_MAIN, 201);
 
-	if (Frostforge::IsDeadminesGuide(creature))
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside The Deadmines.", GOSSIP_SENDER_MAIN, 202);
+        if (Frostforge::IsDeadminesGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside The Deadmines.", GOSSIP_SENDER_MAIN, 202);
 
-	if (Frostforge::IsStockadesGuide(creature))
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside The Stockades.", GOSSIP_SENDER_MAIN, 203);
+        if (Frostforge::IsStockadesGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside The Stockades.", GOSSIP_SENDER_MAIN, 203);
 
-	if (Frostforge::IsShadowfangKeepGuide(creature))
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Shadowfang Keep.", GOSSIP_SENDER_MAIN, 204);
+        if (Frostforge::IsShadowfangKeepGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Shadowfang Keep.", GOSSIP_SENDER_MAIN, 204);
 
-	if (Frostforge::IsBlackfathomDeepsGuide(creature))
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Blackfathom Deeps.", GOSSIP_SENDER_MAIN, 205);
+        if (Frostforge::IsBlackfathomDeepsGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Blackfathom Deeps.", GOSSIP_SENDER_MAIN, 205);
 
-	if (Frostforge::IsGnomereganGuide(creature))
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Gnomeregan.", GOSSIP_SENDER_MAIN, 206);
+        if (Frostforge::IsGnomereganGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Gnomeregan.", GOSSIP_SENDER_MAIN, 206);
 
-	if (Frostforge::IsRazorfenKraulGuide(creature))
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Razorfen Kraul.", GOSSIP_SENDER_MAIN, 207);
+        if (Frostforge::IsRazorfenKraulGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Razorfen Kraul.", GOSSIP_SENDER_MAIN, 207);
 
-	if (Frostforge::IsScarletMonasteryGuide(creature))
-	{
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Graveyard.", GOSSIP_SENDER_MAIN, 208);
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Library.", GOSSIP_SENDER_MAIN, 209);
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Armory.", GOSSIP_SENDER_MAIN, 210);
-	    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Cathedral.", GOSSIP_SENDER_MAIN, 211);
-	}
+        if (Frostforge::IsScarletMonasteryGuide(creature))
+        {
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Graveyard.", GOSSIP_SENDER_MAIN, 208);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Library.", GOSSIP_SENDER_MAIN, 209);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Armory.", GOSSIP_SENDER_MAIN, 210);
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Scarlet Monastery: Cathedral.", GOSSIP_SENDER_MAIN, 211);
+        }
+
+        if (Frostforge::IsUldamanGuide(creature))
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Uldaman.", GOSSIP_SENDER_MAIN, 212);
 
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         return true;
@@ -477,67 +507,77 @@ public:
             case 100:
                 Frostforge::MakeTankGroup(player);
                 break;
+
             case 101:
                 Frostforge::MakeDamageGroup(player);
                 break;
+
             case 102:
                 Frostforge::MakeHealerGroup(player);
                 break;
+
             case 103:
                 Frostforge::RemoveBotGroup(player);
                 break;
-	    case 104:
-    		ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Target an enemy and type |cffffff00/p attack|r to make your bots attack it.");
-    		ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p follow|r if your bots fall behind.");
-	        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p flee|r to make bots run back to you.");
-	        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p grind|r only with care. It makes bots attack anything nearby.");
-    		break;
+
+            case 104:
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Target an enemy and type |cffffff00/p attack|r to make your bots attack it.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p follow|r if your bots fall behind.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p flee|r to make bots run back to you.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p grind|r only with care. It makes bots attack anything nearby.");
+                break;
+
             case 200:
                 Frostforge::SendGroupInsideRagefire(player);
                 break;
-	    case 201:
-	        Frostforge::SendGroupInsideWailingCaverns(player);
-	        break;
 
-	    case 202:
-	        Frostforge::SendGroupInsideDeadmines(player);
-	        break;
+            case 201:
+                Frostforge::SendGroupInsideWailingCaverns(player);
+                break;
 
-	    case 203:
-	        Frostforge::SendGroupInsideStockades(player);
-	        break;
+            case 202:
+                Frostforge::SendGroupInsideDeadmines(player);
+                break;
 
-	    case 204:
-	        Frostforge::SendGroupInsideShadowfangKeep(player);
-	        break;
+            case 203:
+                Frostforge::SendGroupInsideStockades(player);
+                break;
 
-	    case 205:
-	        Frostforge::SendGroupInsideBlackfathomDeeps(player);
-	        break;
+            case 204:
+                Frostforge::SendGroupInsideShadowfangKeep(player);
+                break;
 
-	    case 206:
-	        Frostforge::SendGroupInsideGnomeregan(player);
-	        break;
+            case 205:
+                Frostforge::SendGroupInsideBlackfathomDeeps(player);
+                break;
 
-	    case 207:
-	        Frostforge::SendGroupInsideRazorfenKraul(player);
-	        break;
+            case 206:
+                Frostforge::SendGroupInsideGnomeregan(player);
+                break;
 
-	    case 208:
-	        Frostforge::SendGroupInsideScarletMonasteryGraveyard(player);
-	        break;
+            case 207:
+                Frostforge::SendGroupInsideRazorfenKraul(player);
+                break;
 
-	    case 209:
-	        Frostforge::SendGroupInsideScarletMonasteryLibrary(player);
-	        break;
+            case 208:
+                Frostforge::SendGroupInsideScarletMonasteryGraveyard(player);
+                break;
 
-	    case 210:
-	        Frostforge::SendGroupInsideScarletMonasteryArmory(player);
-	        break;
+            case 209:
+                Frostforge::SendGroupInsideScarletMonasteryLibrary(player);
+                break;
 
-	    case 211:
-	        Frostforge::SendGroupInsideScarletMonasteryCathedral(player);
-	        break;
+            case 210:
+                Frostforge::SendGroupInsideScarletMonasteryArmory(player);
+                break;
+
+            case 211:
+                Frostforge::SendGroupInsideScarletMonasteryCathedral(player);
+                break;
+
+            case 212:
+                Frostforge::SendGroupInsideUldaman(player);
+                break;
 
             case 9000:
                 player->GetSession()->SendListInventory(creature->GetGUID());

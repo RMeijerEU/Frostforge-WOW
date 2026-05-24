@@ -74,6 +74,20 @@ VALUES
  -6114.7305, -3287.094, 258.6213, 5.7705, 300, 0, 0,
  1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Stonewatcher');
 
+ -- Uldaman Archivist Eldrin near the meeting stone.
+DELETE FROM creature
+WHERE id1 = @ELDRIN
+  AND Comment = 'Frostforge Uldaman Archivist Eldrin';
+
+INSERT INTO creature
+(id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
+ position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
+ curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, ScriptName, VerifiedBuild, CreateObject, Comment)
+VALUES
+(@ELDRIN, 0, 0, 0, 3, 1897, 1, 1, 0,
+ -6119.0, -3291.0, 258.6213, 5.7705, 300, 0, 0,
+ 1000, 0, 0, 3, 0, 0, '', NULL, 0, 'Frostforge Uldaman Archivist Eldrin');
+
 INSERT INTO quest_template
 (ID, QuestType, QuestLevel, MinLevel, QuestSortID, QuestInfoID, SuggestedGroupNum,
  RewardNextQuest, RewardXPDifficulty, RewardMoney, RewardMoneyDifficulty,

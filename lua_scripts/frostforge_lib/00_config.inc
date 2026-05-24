@@ -46,6 +46,10 @@ Frostforge.NPC = {
     SM_SOUTHSHORE_SCOUT = 900057,
     SM_TARREN_MILL_APOTHECARY = 900058,
     SM_HILLSBRAD_REFUGEE = 900059,
+
+    -- Act XII — Uldaman
+    ULDAMAN_RELIQUARY_EXPLORER = 900060,
+    ULDAMAN_STONEWATCHER = 900061,
 }
 
 Frostforge.Quest = {
@@ -112,6 +116,13 @@ Frostforge.Quest = {
     SM_MONASTERY_MUST_FALL = 900157,
     SM_ARMORY = 900158,
     SM_CATHEDRAL = 900159,
+
+    -- Act XII — Uldaman
+    ULDAMAN_TITAN_ECHOES = 900160,
+    ULDAMAN_DWARVEN_ORIGINS = 900161,
+    ULDAMAN_TROGG_WARNING = 900162,
+    ULDAMAN_GROUP = 900163,
+    ULDAMAN_DUNGEON = 900164,
 }
 
 Frostforge.Map = {
@@ -127,6 +138,7 @@ Frostforge.Map = {
     GNOMEREGAN = 90,
     RAZORFEN_KRAUL = 47,
     SCARLET_MONASTERY = 189,
+    ULDAMAN = 70,
 }
 
 Frostforge.Class = {
@@ -419,6 +431,22 @@ Frostforge.Location = {
         z = 18.67,
         o = 0.0
     },
+
+    ULDAMAN_STAGING = {
+        map = 0,
+        x = -6065.0,
+        y = -2955.0,
+        z = 209.0,
+        o = 0.7
+    },
+
+    ULDAMAN_INSIDE = {
+        map = 70,
+        x = -228.19,
+        y = 46.16,
+        z = -46.02,
+        o = 1.57
+    },
 }
 
 Frostforge.Level = {
@@ -439,4 +467,6 @@ Frostforge.Level = {
     SM_LIB_REWARD = 37,
     SM_ARMORY_REWARD = 39,
     SM_CATHEDRAL_REWARD = 40,
+
+    ULDAMAN_REWARD = 45,
 }

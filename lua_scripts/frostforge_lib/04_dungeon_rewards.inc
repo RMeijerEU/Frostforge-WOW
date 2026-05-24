@@ -935,6 +935,97 @@ local SM_CATHEDRAL_CLASS_REWARDS = {
 }
 
 -- ============================================================
+-- Act XII — Uldaman rewards
+-- ============================================================
+
+local ULD_ARCHAEDIC_SHARD = 9417
+local ULD_ARCHAEDIC_STONE = 11118
+local ULD_STONESLAYER = 9418
+local ULD_ROCKPOUNDER = 9413
+local ULD_GRIMLOKS_CHARGE = 9416
+local ULD_GALGANNS_FIREBLASTER = 9412
+local ULD_GALGANNS_FIREHAMMER = 9419
+local ULD_GRIMLOKS_TRIBAL_VESTMENTS = 9415
+local ULD_OILSKIN_LEGGINGS = 9414
+local ULD_ROCKSHARD_PAULDRONS = 9411
+local ULD_CRAGFISTS = 9410
+local ULD_MINERS_HAT_OF_THE_DEEP = 9429
+local ULD_SPAULDERS_OF_A_LOST_AGE = 9430
+local ULD_FORGOTTEN_WRAPS = 9433
+local ULD_THE_JACKHAMMER = 9423
+local ULD_PENDULUM_OF_DOOM = 9425
+
+local ULDAMAN_CLASS_REWARDS = {
+    [C.WARRIOR] = {
+        {ULD_PENDULUM_OF_DOOM},
+        {ULD_STONESLAYER},
+        {ULD_ROCKPOUNDER},
+        {ULD_CRAGFISTS},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.PALADIN] = {
+        {ULD_STONESLAYER},
+        {ULD_ROCKPOUNDER},
+        {ULD_CRAGFISTS},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.HUNTER] = {
+        {ULD_GALGANNS_FIREBLASTER},
+        {ULD_GRIMLOKS_CHARGE},
+        {ULD_ROCKSHARD_PAULDRONS},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.ROGUE] = {
+        {ULD_ARCHAEDIC_SHARD},
+        {ULD_OILSKIN_LEGGINGS},
+        {ULD_FORGOTTEN_WRAPS},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.PRIEST] = {
+        {ULD_GRIMLOKS_TRIBAL_VESTMENTS},
+        {ULD_ARCHAEDIC_SHARD},
+        {ULD_MINERS_HAT_OF_THE_DEEP},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.SHAMAN] = {
+        {ULD_GALGANNS_FIREHAMMER},
+        {ULD_GRIMLOKS_TRIBAL_VESTMENTS},
+        {ULD_ROCKSHARD_PAULDRONS},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.MAGE] = {
+        {ULD_GRIMLOKS_TRIBAL_VESTMENTS},
+        {ULD_ARCHAEDIC_SHARD},
+        {ULD_MINERS_HAT_OF_THE_DEEP},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.WARLOCK] = {
+        {ULD_GRIMLOKS_TRIBAL_VESTMENTS},
+        {ULD_ARCHAEDIC_SHARD},
+        {ULD_MINERS_HAT_OF_THE_DEEP},
+        {ULD_ARCHAEDIC_STONE}
+    },
+
+    [C.DRUID] = {
+        {ULD_GRIMLOKS_TRIBAL_VESTMENTS},
+        {ULD_OILSKIN_LEGGINGS},
+        {ULD_SPAULDERS_OF_A_LOST_AGE},
+        {ULD_ARCHAEDIC_STONE}
+    }
+}
+
+function Frostforge.Rewards.GiveUldamanClassReward(player)
+    Frostforge.Rewards.GiveDungeonClassReward(player, ULDAMAN_CLASS_REWARDS, "Uldaman")
+end
+
+-- ============================================================
 -- Reward helpers
 -- ============================================================
 

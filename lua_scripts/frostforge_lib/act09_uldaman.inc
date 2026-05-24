@@ -6,6 +6,37 @@ local L = Frostforge.Location
 local LVL = Frostforge.Level
 local C = Frostforge.Campaign
 
+local function SayToPlayer(creature, player, text)
+    if creature and creature.SendUnitSay then
+        creature:SendUnitSay(text, 0)
+        return
+    end
+
+    if creature and creature.SendUnitWhisper and player then
+        creature:SendUnitWhisper(text, player)
+        return
+    end
+
+    if player then
+        player:SendBroadcastMessage(text)
+    end
+end
+
+local function GiveObjectiveCredit(player, questId, creditNpc)
+    if not player then
+        return
+    end
+
+    if player:HasQuest(questId) and not player:CanCompleteQuest(questId) then
+        player:KilledMonsterCredit(creditNpc)
+
+        -- Fallback for event-style objective behavior.
+        if not player:CanCompleteQuest(questId) then
+            player:AreaExploredOrEventHappens(questId)
+        end
+    end
+end
+
 local function OnUldamanQuestAccept(event, player, quest)
     local questId = C.GetQuestId(quest)
 
@@ -52,34 +83,41 @@ local function OnUldamanQuestReward(event, player, quest, opt)
 end
 
 local function OnReliquaryExplorerGossipHello(event, player, creature)
-    C.SimpleObjectiveGossipHello(
-        player,
+    SayToPlayer(
         creature,
-        Q.ULDAMAN_DWARVEN_ORIGINS,
-        NPC.ULDAMAN_RELIQUARY_EXPLORER,
-        "The Reliquary Explorer says: The deeper we dig, the less this looks like a dwarven ruin. Uldaman is Titan work. The earthen came before the dwarves, shaped from stone and purpose. Somewhere between then and now, flesh entered the story.",
-        "What did the dwarves find here?"
+        player,
+        "The deeper we dig, the less this looks like a dwarven ruin. Uldaman is Titan work. The earthen came before the dwarves, shaped from stone and purpose. Somewhere between then and now, flesh entered the story."
     )
+
+    GiveObjectiveCredit(
+        player,
+        Q.ULDAMAN_DWARVEN_ORIGINS,
+        NPC.ULDAMAN_RELIQUARY_EXPLORER
+    )
+
+    player:GossipComplete()
 end
 
 local function OnStonewatcherGossipHello(event, player, creature)
-    C.SimpleObjectiveGossipHello(
-        player,
+    SayToPlayer(
         creature,
-        Q.ULDAMAN_TROGG_WARNING,
-        NPC.ULDAMAN_STONEWATCHER,
-        "The Stonewatcher says: The troggs are not an accident to ignore. They are a broken echo of creation. If the Titans shaped this world, then Uldaman proves even their works could fracture.",
-        "What do the troggs mean?"
+        player,
+        "The troggs are not an accident to ignore. They are a broken echo of creation. If the Titans shaped this world, then Uldaman proves even their works could fracture."
     )
+
+    GiveObjectiveCredit(
+        player,
+        Q.ULDAMAN_TROGG_WARNING,
+        NPC.ULDAMAN_STONEWATCHER
+    )
+
+    player:GossipComplete()
 end
 
 RegisterPlayerEvent(31, OnUldamanQuestAccept)
 RegisterPlayerEvent(54, OnUldamanQuestReward)
 
 RegisterCreatureGossipEvent(NPC.ULDAMAN_RELIQUARY_EXPLORER, 1, OnReliquaryExplorerGossipHello)
-RegisterCreatureGossipEvent(NPC.ULDAMAN_RELIQUARY_EXPLORER, 2, C.CompleteGossip)
-
 RegisterCreatureGossipEvent(NPC.ULDAMAN_STONEWATCHER, 1, OnStonewatcherGossipHello)
-RegisterCreatureGossipEvent(NPC.ULDAMAN_STONEWATCHER, 2, C.CompleteGossip)
 
 print("[Frostforge] Act XII Uldaman loaded.")

@@ -34,6 +34,15 @@ WHERE Comment IN (
   'Frostforge Uldaman Portal Guide'
 );
 
+-- Clean up manually placed duplicate Eldrin near the Uldaman portal.
+-- Keeps only the official commented portal Eldrin inserted below.
+DELETE FROM creature
+WHERE id1 = @ELDRIN
+  AND map = 0
+  AND position_x BETWEEN -6080 AND -6055
+  AND position_y BETWEEN -2965 AND -2935
+  AND COALESCE(Comment, '') <> 'Frostforge Uldaman Portal Archivist Eldrin';
+
 INSERT INTO creature_template
 (entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, name, subname, IconName, gossip_menu_id,
  minlevel, maxlevel, exp, faction, npcflag, speed_walk, speed_run, speed_swim, speed_flight, detection_range,
@@ -86,7 +95,8 @@ VALUES
  1000, 0, 0, 3, 0, 0, '', NULL, 0, 'Frostforge Uldaman Archivist Eldrin');
 
 -- Uldaman cave guide.
--- This guide is used by "Into the Badlands" and should send the group toward the Uldaman portal route.
+-- This guide is used by "Into the Badlands" and sends the group toward the Uldaman portal route.
+-- npcflag 129 = gossip + vendor.
 INSERT INTO creature
 (id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
  position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
@@ -94,10 +104,11 @@ INSERT INTO creature
 VALUES
 (@GUIDE, 0, 0, 0, 3, 1897, 1, 1, 0,
  -6094.97, -3187.6858, 255.78978, 5.12886, 300, 0, 0,
- 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Cave Guide');
+ 1000, 0, 0, 129, 0, 0, '', NULL, 0, 'Frostforge Uldaman Cave Guide');
 
 -- Uldaman portal staging.
 -- Safe player-tested location just before the instance portal.
+-- npcflag 129 on the guide = gossip + vendor.
 INSERT INTO creature
 (id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
  position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
@@ -109,7 +120,7 @@ VALUES
 
 (@GUIDE, 0, 0, 0, 1337, 1337, 1, 1, 0,
  -6069.0, -2953.0, 209.77402, 3.5902698, 300, 0, 0,
- 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge Uldaman Portal Guide');
+ 1000, 0, 0, 129, 0, 0, '', NULL, 0, 'Frostforge Uldaman Portal Guide');
 
 INSERT INTO quest_template
 (ID, QuestType, QuestLevel, MinLevel, QuestSortID, QuestInfoID, SuggestedGroupNum,

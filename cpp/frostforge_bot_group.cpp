@@ -9,28 +9,16 @@ namespace Frostforge
 {
     static constexpr uint32 NPC_FROSTFORGE_GUIDE = 900010;
 
-    static constexpr uint32 QUEST_ULDAMAN_GROUP = 900163;
-
     static constexpr uint32 MAP_RFC = 389;
-
     static constexpr uint32 MAP_WAILING_CAVERNS = 43;
-
     static constexpr uint32 MAP_DEADMINES = 36;
-
     static constexpr uint32 MAP_STOCKADES = 34;
-
     static constexpr uint32 MAP_SHADOWFANG_KEEP = 33;
-
     static constexpr uint32 MAP_BLACKFATHOM_DEEPS = 48;
-
     static constexpr uint32 MAP_GNOMEREGAN = 90;
-
     static constexpr uint32 MAP_RAZORFEN_KRAUL = 47;
-
     static constexpr uint32 MAP_SCARLET_MONASTERY = 189;
-
     static constexpr uint32 MAP_ULDAMAN = 70;
-
     static constexpr uint32 MAP_ZULFARRAK = 209;
 
     static constexpr float RFC_INSIDE_X = 5.835333f;
@@ -98,6 +86,11 @@ namespace Frostforge
     static constexpr float ULDAMAN_INSIDE_Z = -46.02f;
     static constexpr float ULDAMAN_INSIDE_O = 1.57f;
 
+    static constexpr float ZF_INSIDE_X = 1218.9818f;
+    static constexpr float ZF_INSIDE_Y = 847.068f;
+    static constexpr float ZF_INSIDE_Z = 9.76403f;
+    static constexpr float ZF_INSIDE_O = 5.8433847f;
+
     static constexpr float RFC_ENTRANCE_X = 1811.78f;
     static constexpr float RFC_ENTRANCE_Y = -4410.50f;
     static constexpr float RFC_ENTRANCE_Z = -18.47f;
@@ -147,23 +140,9 @@ namespace Frostforge
     static constexpr float ULDAMAN_PORTAL_Z = 209.77402f;
     static constexpr float ULDAMAN_PORTAL_O = 3.5902698f;
 
-    static constexpr float ZF_INSIDE_X = 1218.9818f;
-    static constexpr float ZF_INSIDE_Y = 847.068f;
-    static constexpr float ZF_INSIDE_Z = 9.76403f;
-    static constexpr float ZF_INSIDE_O = 5.8433847f;
-
     static constexpr float ZF_ENTRANCE_GUIDE_X = -6798.3804f;
     static constexpr float ZF_ENTRANCE_GUIDE_Y = -2895.9358f;
     static constexpr float ZF_ENTRANCE_GUIDE_Z = 9.17488f;
-
-    static constexpr float ZF_PORTAL_GUIDE_X = -6796.5f;
-    static constexpr float ZF_PORTAL_GUIDE_Y = -2898.0f;
-    static constexpr float ZF_PORTAL_GUIDE_Z = 9.17488f;
-
-    static constexpr float ZF_PORTAL_X = -6801.0f;
-    static constexpr float ZF_PORTAL_Y = -2893.5f;
-    static constexpr float ZF_PORTAL_Z = 9.17488f;
-    static constexpr float ZF_PORTAL_O = 2.1502473f;
 
     static void RunCommand(Player* player, char const* command)
     {
@@ -295,7 +274,7 @@ namespace Frostforge
         return creature->GetDistance(ULDAMAN_PORTAL_GUIDE_X, ULDAMAN_PORTAL_GUIDE_Y, ULDAMAN_PORTAL_GUIDE_Z) < 75.0f;
     }
 
-    static bool IsZulFarrakEntranceGuide(Creature* creature)
+    static bool IsZulFarrakGuide(Creature* creature)
     {
         if (!creature)
             return false;
@@ -303,18 +282,7 @@ namespace Frostforge
         if (creature->GetMapId() != 1)
             return false;
 
-        return creature->GetDistance(ZF_ENTRANCE_GUIDE_X, ZF_ENTRANCE_GUIDE_Y, ZF_ENTRANCE_GUIDE_Z) < 1.5f;
-    }
-
-    static bool IsZulFarrakPortalGuide(Creature* creature)
-    {
-        if (!creature)
-            return false;
-
-        if (creature->GetMapId() != 1)
-            return false;
-
-        return creature->GetDistance(ZF_PORTAL_GUIDE_X, ZF_PORTAL_GUIDE_Y, ZF_PORTAL_GUIDE_Z) < 1.5f;
+        return creature->GetDistance(ZF_ENTRANCE_GUIDE_X, ZF_ENTRANCE_GUIDE_Y, ZF_ENTRANCE_GUIDE_Z) < 10.0f;
     }
 
     static void TeleportGroup(Player* player, uint32 mapId, float x, float y, float z, float o)
@@ -514,13 +482,12 @@ namespace Frostforge
         TeleportGroup(player, MAP_ULDAMAN, ULDAMAN_INSIDE_X, ULDAMAN_INSIDE_Y, ULDAMAN_INSIDE_Z, ULDAMAN_INSIDE_O);
     }
 
-    static void SendGroupToZulFarrakPortal(Player* player)
+    static void PrepareGroupForZulFarrak(Player* player)
     {
         if (player)
             player->KilledMonsterCredit(NPC_FROSTFORGE_GUIDE);
 
-        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group is ready. Sending you to the Zul'Farrak portal.");
-        TeleportGroup(player, 1, ZF_PORTAL_X, ZF_PORTAL_Y, ZF_PORTAL_Z, ZF_PORTAL_O);
+        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group is ready for Zul'Farrak. Speak with Archivist Eldrin, then enter the dungeon when prepared.");
     }
 
     static void SendGroupInsideZulFarrak(Player* player)
@@ -585,11 +552,11 @@ public:
         if (Frostforge::IsUldamanPortalGuide(creature))
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Uldaman.", GOSSIP_SENDER_MAIN, 213);
 
-        if (Frostforge::IsZulFarrakEntranceGuide(creature))
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group to the Zul'Farrak portal.", GOSSIP_SENDER_MAIN, 214);
-
-        if (Frostforge::IsZulFarrakPortalGuide(creature))
+        if (Frostforge::IsZulFarrakGuide(creature))
+        {
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "My group is ready for Zul'Farrak.", GOSSIP_SENDER_MAIN, 214);
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Zul'Farrak.", GOSSIP_SENDER_MAIN, 215);
+        }
 
         SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         return true;
@@ -681,12 +648,12 @@ public:
                 break;
 
             case 214:
-                Frostforge::SendGroupToZulFarrakPortal(player);
+                Frostforge::PrepareGroupForZulFarrak(player);
                 break;
 
             case 215:
                 Frostforge::SendGroupInsideZulFarrak(player);
-                break;                
+                break;
 
             case 9000:
                 player->GetSession()->SendListInventory(creature->GetGUID());

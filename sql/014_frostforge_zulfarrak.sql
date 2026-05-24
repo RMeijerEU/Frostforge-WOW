@@ -107,7 +107,8 @@ VALUES
  -7164.0, -3783.5, 8.8464775, 3.2560885, 300, 0, 0,
  1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge ZulFarrak Tanaris Chronicler');
 
--- Zul'Farrak meeting stone / staging.
+-- Zul'Farrak entrance / meeting stone.
+-- ZF summoning stone and instance entrance are close together, so use a single local Eldrin and a single guide.
 INSERT INTO creature
 (id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
  position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
@@ -123,31 +124,11 @@ VALUES
 
 (@NPC_RELIC_SEEKER, 0, 0, 1, 440, 978, 1, 1, 0,
  -6827.8, -2882.2, 8.929153, 5.785069, 300, 0, 0,
- 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge ZulFarrak Relic Seeker');
+ 1000, 0, 0, 1, 0, 0, '', NULL, 0, 'Frostforge ZulFarrak Relic Seeker'),
 
--- Zul'Farrak entrance guide.
-INSERT INTO creature
-(id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
- position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
- curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, ScriptName, VerifiedBuild, CreateObject, Comment)
-VALUES
 (@GUIDE, 0, 0, 1, 440, 978, 1, 1, 0,
  -6798.3804, -2895.9358, 9.17488, 2.1502473, 300, 0, 0,
  1000, 0, 0, 129, 0, 0, '', NULL, 0, 'Frostforge ZulFarrak Entrance Guide');
-
--- Zul'Farrak portal staging.
-INSERT INTO creature
-(id1, id2, id3, map, zoneId, areaId, spawnMask, phaseMask, equipment_id,
- position_x, position_y, position_z, orientation, spawntimesecs, wander_distance, currentwaypoint,
- curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, ScriptName, VerifiedBuild, CreateObject, Comment)
-VALUES
-(@ELDRIN, 0, 0, 1, 440, 978, 1, 1, 0,
- -6801.0, -2893.5, 9.17488, 2.1502473, 300, 0, 0,
- 1000, 0, 0, 3, 0, 0, '', NULL, 0, 'Frostforge ZulFarrak Portal Archivist Eldrin'),
-
-(@GUIDE, 0, 0, 1, 440, 978, 1, 1, 0,
- -6796.5, -2898.0, 9.17488, 2.1502473, 300, 0, 0,
- 1000, 0, 0, 129, 0, 0, '', NULL, 0, 'Frostforge ZulFarrak Portal Guide');
 
 INSERT INTO quest_template
 (ID, QuestType, QuestLevel, MinLevel, QuestSortID, QuestInfoID, SuggestedGroupNum,
@@ -175,7 +156,7 @@ The Sandfury trolls hold Zul''Farrak in the deep desert. Before you walk toward 
  'Speak with the Frostforge Sandfury Exile near Zul''Farrak.',
  'The Sandfury are not merely raiders hiding in the dunes. They are the broken edge of an ancient troll legacy, proud, violent, and unwilling to vanish into history.
 
-Speak with the Sandfury exile near Zul''Farrak and learn what still burns behind the city gates.',
+Travel south from Gadgetzan to the gates of Zul''Farrak. Speak with the Sandfury exile and learn what still burns behind the city gates.',
  '', 'Return to Archivist Eldrin near Zul''Farrak.',
  @NPC_SANDFURY_EXILE, 0, 0, 0,
  1, 0, 0, 0,
@@ -199,8 +180,8 @@ Speak with the relic seeker and learn why Zul''Farrak is more than a desert fort
  'Gather your party and speak with the Frostforge Guide at the Zul''Farrak entrance.',
  'You have heard the warning and the history. Now the gates of Zul''Farrak stand ahead.
 
-Gather your party near the entrance. When your group is ready, speak with the Frostforge Guide and move to the dungeon portal.',
- '', 'Meet Archivist Eldrin at the Zul''Farrak portal.',
+Gather your party near the entrance. When your group is ready, speak with the Frostforge Guide. The guide can prepare your group and send you inside Zul''Farrak.',
+ '', 'Return to Archivist Eldrin at the Zul''Farrak entrance.',
  @GUIDE, 0, 0, 0,
  1, 0, 0, 0,
  'Frostforge Guide consulted', '', '', '', NULL),

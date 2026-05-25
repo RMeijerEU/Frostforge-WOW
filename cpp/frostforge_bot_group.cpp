@@ -585,9 +585,20 @@ public:
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as tank. Make me a group.", GOSSIP_SENDER_MAIN, 100);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as damage. Make me a group.", GOSSIP_SENDER_MAIN, 101);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as healer. Make me a group.", GOSSIP_SENDER_MAIN, 102);
+
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, " ", GOSSIP_SENDER_MAIN, 9901);
+
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How do Frostforge bot groups work?", GOSSIP_SENDER_MAIN, 104);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How do I add my own bots?", GOSSIP_SENDER_MAIN, 105);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How do I command bots in combat?", GOSSIP_SENDER_MAIN, 106);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "What is a good dungeon group?", GOSSIP_SENDER_MAIN, 107);
+
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, " ", GOSSIP_SENDER_MAIN, 9902);
+
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Remove my Playerbot group.", GOSSIP_SENDER_MAIN, 103);
-        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "How do I control my bots in dungeons?", GOSSIP_SENDER_MAIN, 104);
         AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Show me supplies.", GOSSIP_SENDER_MAIN, 9000);
+
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, " ", GOSSIP_SENDER_MAIN, 9903);
 
         if (Frostforge::IsRagefireEntranceGuide(creature))
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Send my group inside Ragefire Chasm.", GOSSIP_SENDER_MAIN, 200);
@@ -643,6 +654,13 @@ public:
 
         switch (action)
         {
+            case 9901:
+            case 9902:
+            case 9903:
+                CloseGossipMenuFor(player);
+                return true;
+
+
             case 100:
                 Frostforge::MakeTankGroup(player);
                 break;
@@ -660,10 +678,34 @@ public:
                 break;
 
             case 104:
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Frostforge is built for solo-friendly dungeon progression.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r I can create a quick party for you, but you can also build your own bot group.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r A normal dungeon group should stay at 5 members total: you plus up to 4 bots.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Do not turn your party into a raid for dungeon progression.");
+                break;
+
+            case 105:
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r To add your own bots, use commands like:");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cffffff00.playerbots bot addclass warrior|r");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cffffff00.playerbots bot addclass priest|r");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cffffff00.playerbots bot addclass mage|r");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cffffff00.playerbots bot addclass hunter|r");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r To remove all bots, use |cffffff00.playerbots bot remove *|r or my remove option.");
+                break;
+
+            case 106:
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Bots listen to party chat commands.");
                 ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Target an enemy and type |cffffff00/p attack|r to make your bots attack it.");
                 ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p follow|r if your bots fall behind.");
-                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p flee|r to make bots run back to you.");
-                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p grind|r only with care. It makes bots attack anything nearby.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p flee|r to pull bots back to you.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Use |cffffff00/p grind|r carefully. It makes bots attack nearby enemies.");
+                break;
+
+            case 107:
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r A safe dungeon group usually needs one tank, one healer, and damage dealers.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Easy setup: warrior tank, priest healer, mage/hunter/rogue damage.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Later dungeons are easier if you choose bots deliberately instead of relying on quick setup.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r My quick group options are convenient, but custom groups are stronger.");
                 break;
 
             case 200:

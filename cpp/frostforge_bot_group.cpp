@@ -285,9 +285,47 @@ namespace Frostforge
         return creature->GetDistance(ZF_ENTRANCE_GUIDE_X, ZF_ENTRANCE_GUIDE_Y, ZF_ENTRANCE_GUIDE_Z) < 10.0f;
     }
 
-    static void TeleportGroup(Player* player, uint32 mapId, float x, float y, float z, float o)
+    static uint8 CountCurrentGroupMembers(Player* player)
     {
         if (!player)
+            return 0;
+
+        Group* group = player->GetGroup();
+
+        if (!group)
+            return 1;
+
+        uint8 count = 0;
+
+        for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+        {
+            Player* member = itr->GetSource();
+
+            if (!member || !member->IsInWorld())
+                continue;
+
+            ++count;
+        }
+
+        return count;
+    }
+
+    static bool IsPlayerInRaidGroup(Player* player)
+    {
+        if (!player)
+            return false;
+
+        Group* group = player->GetGroup();
+
+        if (!group)
+            return false;
+
+        return group->isRaidGroup();
+    }
+
+    static void TeleportGroup(Player* player, uint32 mapId, float x, float y, float z, float o)
+    {
+        if (!player || !player->GetSession())
             return;
 
         Group* group = player->GetGroup();
@@ -295,6 +333,20 @@ namespace Frostforge
         if (!group)
         {
             player->TeleportTo(mapId, x, y, z, o);
+            return;
+        }
+
+        if (IsPlayerInRaidGroup(player))
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group is a raid. Remove extra bots and return to a normal party before entering the dungeon.");
+            return;
+        }
+
+        uint8 memberCount = CountCurrentGroupMembers(player);
+
+        if (memberCount > 5)
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group has more than 5 members. Remove extra bots before entering the dungeon.");
             return;
         }
 
@@ -325,15 +377,30 @@ namespace Frostforge
 
     static void MakeGroupFromList(Player* player, std::vector<std::pair<uint8, char const*>> const& classes, char const* label)
     {
-        if (!player)
+        if (!player || !player->GetSession())
             return;
 
+        if (IsPlayerInRaidGroup(player))
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group is already a raid. Remove your Playerbot group first if you want a new setup.");
+            return;
+        }
+
+        uint8 currentMembers = CountCurrentGroupMembers(player);
+
+        if (currentMembers >= 5)
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Your group is already full. Remove your Playerbot group first if you want a new setup.");
+            return;
+        }
+
+        uint8 slotsAvailable = 5 - currentMembers;
         uint8 playerClass = player->getClass();
         uint8 added = 0;
 
         for (auto const& entry : classes)
         {
-            if (added >= 4)
+            if (added >= slotsAvailable)
                 break;
 
             if (entry.first == playerClass)
@@ -343,7 +410,13 @@ namespace Frostforge
             ++added;
         }
 
-        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r %s group requested.", label);
+        if (added == 0)
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r No extra bots were added. Your group may already be full or incompatible with this setup.");
+            return;
+        }
+
+        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r %s group requested. Added %u bot(s).", label, added);
     }
 
     static void MakeTankGroup(Player* player)
@@ -392,7 +465,9 @@ namespace Frostforge
     static void RemoveBotGroup(Player* player)
     {
         RunCommand(player, ".playerbots bot remove *");
-        ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Playerbot group remove requested.");
+
+        if (player && player->GetSession())
+            ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffFrostforge Guide:|r Playerbot group remove requested.");
     }
 
     static void SendGroupInsideRagefire(Player* player)

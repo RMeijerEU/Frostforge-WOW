@@ -9,6 +9,8 @@ namespace Frostforge
 {
     static constexpr uint32 NPC_FROSTFORGE_GUIDE = 900010;
 
+    static constexpr uint32 QUEST_FORMING_FIRST_DUNGEON_GROUP = 900103;
+
     static constexpr uint32 MAP_RFC = 389;
     static constexpr uint32 MAP_WAILING_CAVERNS = 43;
     static constexpr uint32 MAP_DEADMINES = 36;
@@ -582,6 +584,9 @@ public:
         if (creature->GetEntry() != Frostforge::NPC_FROSTFORGE_GUIDE)
             return false;
 
+        if (player->GetQuestStatus(Frostforge::QUEST_FORMING_FIRST_DUNGEON_GROUP) == QUEST_STATUS_INCOMPLETE)
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Eldrin sent me to learn about dungeon groups.", GOSSIP_SENDER_MAIN, 108);
+
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as tank. Make me a group.", GOSSIP_SENDER_MAIN, 100);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as damage. Make me a group.", GOSSIP_SENDER_MAIN, 101);
         AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I want to play as healer. Make me a group.", GOSSIP_SENDER_MAIN, 102);
@@ -660,6 +665,13 @@ public:
                 CloseGossipMenuFor(player);
                 return true;
 
+            case 108:
+                player->KilledMonsterCredit(Frostforge::NPC_FROSTFORGE_GUIDE);
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffGroupfinder Marric:|r Eldrin handles the story. I handle the practical side.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffGroupfinder Marric:|r I can help you make a quick party, sell supplies, explain bot commands, and send your group into dungeons.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffGroupfinder Marric:|r Quick groups are useful, but later dungeons reward players who build their own tank, healer, and damage setup.");
+                ChatHandler(player->GetSession()).PSendSysMessage("|cff66ccffGroupfinder Marric:|r A normal dungeon party is you plus up to four bots. Do not use a raid group for dungeon progression.");
+                break;
 
             case 100:
                 Frostforge::MakeTankGroup(player);

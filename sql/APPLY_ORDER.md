@@ -24,7 +24,8 @@ Suggested structure:
     012_frostforge_story_npc_positions.sql
     013_frostforge_uldaman.sql
     014_frostforge_zulfarrak.sql
-
+    015_frostforge_groupfinder_marric.sql
+    
 ## Apply Example
 
     sudo mysql acore_world < sql/001_frostforge_core_npcs.sql

@@ -10,6 +10,45 @@ local L = Frostforge.Location
 local U = Frostforge.Utils
 local Veil = Frostforge.CampaignVeil
 
+local M = Frostforge.Map
+
+local DUNGEON_HOME_BIND_BLOCKLIST = {
+    [M.RAGEFIRE_CHASM] = true,
+    [M.WAILING_CAVERNS] = true,
+    [M.DEADMINES] = true,
+    [M.STOCKADES] = true,
+    [M.SHADOWFANG_KEEP] = true,
+    [M.BLACKFATHOM_DEEPS] = true,
+    [M.GNOMEREGAN] = true,
+    [M.RAZORFEN_KRAUL] = true,
+    [M.SCARLET_MONASTERY] = true,
+    [M.ULDAMAN] = true,
+    [M.ZULFARRAK] = true
+}
+
+local function BindHearthstoneToEldrin(player, creature)
+    if not player or not creature then
+        return
+    end
+
+    local mapId = creature:GetMapId()
+
+    -- Do not bind hearthstone to dungeon/instance maps.
+    if DUNGEON_HOME_BIND_BLOCKLIST[mapId] then
+        return
+    end
+
+    local areaId = creature:GetAreaId() or 0
+
+    player:SetBindPoint(
+        creature:GetX(),
+        creature:GetY(),
+        creature:GetZ(),
+        mapId,
+        areaId
+    )
+end
+
 local function IsHorde(player)
     return player:GetTeam() == Frostforge.Team.HORDE
 end
@@ -308,6 +347,7 @@ local function CreditEldrinTravelObjectives(player, creature)
 end
 
 local function OnEldrinGossipHello(event, player, creature)
+    BindHearthstoneToEldrin(player, creature)
     CreditEldrinTravelObjectives(player, creature)
 
     player:GossipClearMenu()

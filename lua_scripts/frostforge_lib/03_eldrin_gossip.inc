@@ -9,6 +9,7 @@ local Q = Frostforge.Quest
 local L = Frostforge.Location
 local U = Frostforge.Utils
 local Veil = Frostforge.CampaignVeil
+local M = Frostforge.Map
 
 local M = Frostforge.Map
 
@@ -344,6 +345,52 @@ local function CreditEldrinTravelObjectives(player, creature)
             end
         end
     end
+end
+
+local DUNGEON_HOME_BIND_BLOCKLIST = {
+    [M.RAGEFIRE_CHASM] = true,
+    [M.WAILING_CAVERNS] = true,
+    [M.DEADMINES] = true,
+    [M.STOCKADES] = true,
+    [M.SHADOWFANG_KEEP] = true,
+    [M.BLACKFATHOM_DEEPS] = true,
+    [M.GNOMEREGAN] = true,
+    [M.RAZORFEN_KRAUL] = true,
+    [M.SCARLET_MONASTERY] = true,
+    [M.ULDAMAN] = true,
+    [M.ZULFARRAK] = true
+}
+
+local function BindHearthstoneToEldrin(player, creature)
+    if not player or not creature then
+        return
+    end
+
+    local mapId = creature:GetMapId()
+
+    -- Do not bind Hearthstone to dungeon/instance maps.
+    if DUNGEON_HOME_BIND_BLOCKLIST[mapId] then
+        return
+    end
+
+    local guid = player:GetGUIDLow()
+    local zoneId = creature:GetZoneId() or 0
+    local x = creature:GetX()
+    local y = creature:GetY()
+    local z = creature:GetZ()
+
+    CharDBExecute(string.format([[
+        INSERT INTO character_homebind
+            (guid, mapId, zoneId, posX, posY, posZ)
+        VALUES
+            (%u, %u, %u, %.6f, %.6f, %.6f)
+        ON DUPLICATE KEY UPDATE
+            mapId = VALUES(mapId),
+            zoneId = VALUES(zoneId),
+            posX = VALUES(posX),
+            posY = VALUES(posY),
+            posZ = VALUES(posZ)
+    ]], guid, mapId, zoneId, x, y, z))
 end
 
 local function OnEldrinGossipHello(event, player, creature)

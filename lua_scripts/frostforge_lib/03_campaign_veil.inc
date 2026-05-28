@@ -12,6 +12,10 @@ Frostforge.CampaignVeil.OriginalReputation = Frostforge.CampaignVeil.OriginalRep
 -- Short interval because this is a fallback safety net for hostile city/open-world NPCs.
 local VEIL_TICK_MS = 100
 
+-- Orb of Deception visual disguise.
+-- This aura only lasts a few minutes, so MaintainVeil refreshes it while the Campaign Veil is active.
+local SPELL_ORB_OF_DECEPTION = 16739
+
 -- Unit field / flags for WotLK/AzerothCore.
 -- These are extra protection. Reputation/faction diplomacy is the primary solution.
 local UNIT_FIELD_FLAGS = 46
@@ -146,6 +150,26 @@ local function RemoveVeilFlags(player)
     end
 end
 
+local function ApplyVeilDisguise(player)
+    if not player then
+        return
+    end
+
+    if not player:HasAura(SPELL_ORB_OF_DECEPTION) then
+        player:CastSpell(player, SPELL_ORB_OF_DECEPTION, true)
+    end
+end
+
+local function RemoveVeilDisguise(player)
+    if not player then
+        return
+    end
+
+    if player:HasAura(SPELL_ORB_OF_DECEPTION) then
+        player:RemoveAura(SPELL_ORB_OF_DECEPTION)
+    end
+end
+
 local function ApplyCampaignReputation(player)
     if not player or not player.SetReputation or not player.GetReputation then
         return
@@ -209,6 +233,7 @@ local function MaintainVeil(eventId, delay, repeats, player)
     -- Do not call ApplyCampaignReputation here. It causes reputation spam.
     player:SetFaction(F.NEUTRAL)
     ApplyVeilFlags(player)
+    ApplyVeilDisguise(player)
 
     if player.SetPvP then
         player:SetPvP(false)
@@ -241,6 +266,7 @@ function Frostforge.CampaignVeil.Apply(player, factionId)
     player:SetFaction(factionId)
     ApplyCampaignReputation(player)
     ApplyVeilFlags(player)
+    ApplyVeilDisguise(player)
 
     local guid = GetGuid(player)
     if guid then
@@ -280,6 +306,7 @@ function Frostforge.CampaignVeil.Remove(player)
 
     StopUnitCombat(player)
     RemoveVeilFlags(player)
+    RemoveVeilDisguise(player)
     RestoreCampaignReputation(player)
 
     player:SetFactionForRace(player:GetRace())

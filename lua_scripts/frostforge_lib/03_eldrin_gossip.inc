@@ -9,23 +9,32 @@ local Q = Frostforge.Quest
 local L = Frostforge.Location
 local U = Frostforge.Utils
 local Veil = Frostforge.CampaignVeil
-local M = Frostforge.Map
-
-local M = Frostforge.Map
 
 local DUNGEON_HOME_BIND_BLOCKLIST = {
-    [M.RAGEFIRE_CHASM] = true,
-    [M.WAILING_CAVERNS] = true,
-    [M.DEADMINES] = true,
-    [M.STOCKADES] = true,
-    [M.SHADOWFANG_KEEP] = true,
-    [M.BLACKFATHOM_DEEPS] = true,
-    [M.GNOMEREGAN] = true,
-    [M.RAZORFEN_KRAUL] = true,
-    [M.SCARLET_MONASTERY] = true,
-    [M.ULDAMAN] = true,
-    [M.ZULFARRAK] = true
+    [389] = true, -- Ragefire Chasm
+    [43]  = true, -- Wailing Caverns
+    [36]  = true, -- Deadmines
+    [34]  = true, -- Stockades
+    [33]  = true, -- Shadowfang Keep
+    [48]  = true, -- Blackfathom Deeps
+    [90]  = true, -- Gnomeregan
+    [47]  = true, -- Razorfen Kraul
+    [189] = true, -- Scarlet Monastery
+    [70]  = true, -- Uldaman
+    [209] = true  -- Zul'Farrak
 }
+
+local function IsQuestActive(player, questId)
+    if not player or not questId then
+        return false
+    end
+
+    return player:HasQuest(questId) and not player:GetQuestRewardStatus(questId)
+end
+
+local function HasOrgrimmarInvestigation(player)
+    return IsQuestActive(player, Q.ORGRIMMAR) or IsQuestActive(player, 900102)
+end
 
 local function BindHearthstoneToEldrin(player, creature)
     if not player or not creature then
@@ -34,19 +43,19 @@ local function BindHearthstoneToEldrin(player, creature)
 
     local mapId = creature:GetMapId()
 
-    -- Do not bind hearthstone to dungeon/instance maps.
+    -- Do not bind Hearthstone to dungeon/instance maps.
     if DUNGEON_HOME_BIND_BLOCKLIST[mapId] then
         return
     end
 
-    local areaId = creature:GetAreaId() or 0
+    local zoneId = creature:GetZoneId() or 0
 
     player:SetBindPoint(
         creature:GetX(),
         creature:GetY(),
         creature:GetZ(),
         mapId,
-        areaId
+        zoneId
     )
 end
 
@@ -79,14 +88,14 @@ local function AddPathExplanation(player)
 end
 
 local function AddActIOptions(player)
-    if player:HasQuest(Q.ORGRIMMAR) and not player:GetQuestRewardStatus(Q.ORGRIMMAR) then
+    if HasOrgrimmarInvestigation(player) then
         player:GossipMenuAddItem(0, "Send me to Orgrimmar. I am ready to investigate.", 0, 20)
         player:GossipMenuAddItem(0, "Restore my normal faction.", 0, 22)
     end
 end
 
 local function AddActIIOptions(player)
-    if player:HasQuest(Q.WC_ROAD) and not player:GetQuestRewardStatus(Q.WC_ROAD) then
+    if IsQuestActive(player, Q.WC_ROAD) then
         if IsAlliance(player) then
             player:GossipMenuAddItem(0, "Send me to the Crossroads under the Campaign Veil.", 0, 201)
         else
@@ -94,7 +103,7 @@ local function AddActIIOptions(player)
         end
     end
 
-    if player:HasQuest(Q.WC_INVESTIGATION) and not player:GetQuestRewardStatus(Q.WC_INVESTIGATION) then
+    if IsQuestActive(player, Q.WC_INVESTIGATION) then
         if IsAlliance(player) then
             player:GossipMenuAddItem(0, "Send me to the Crossroads under the Campaign Veil.", 0, 201)
         else
@@ -104,7 +113,7 @@ local function AddActIIOptions(player)
         player:GossipMenuAddItem(0, "Remind me where to investigate in the Barrens.", 0, 204)
     end
 
-    if player:HasQuest(Q.WC_GROUP) and not player:GetQuestRewardStatus(Q.WC_GROUP) then
+    if IsQuestActive(player, Q.WC_GROUP) then
         player:GossipMenuAddItem(0, "The group is ready for the Wailing Caverns.", 0, 205)
     end
 end
@@ -137,15 +146,15 @@ local function AddActIIIOptions(player, creature)
         end
     end
 
-    if player:HasQuest(Q.DM_INVESTIGATION) and not player:GetQuestRewardStatus(Q.DM_INVESTIGATION) then
+    if IsQuestActive(player, Q.DM_INVESTIGATION) then
         player:GossipMenuAddItem(0, "Remind me where to investigate in Westfall.", 0, 303)
     end
 
-    if player:HasQuest(Q.DM_SI7) and not player:GetQuestRewardStatus(Q.DM_SI7) then
+    if IsQuestActive(player, Q.DM_SI7) then
         player:GossipMenuAddItem(0, "Remind me where the SI:7 agent is.", 0, 305)
     end
 
-    if player:HasQuest(Q.DM_GROUP) and not player:GetQuestRewardStatus(Q.DM_GROUP) then
+    if IsQuestActive(player, Q.DM_GROUP) then
         player:GossipMenuAddItem(0, "The group is ready for the Deadmines.", 0, 304)
     end
 end
@@ -185,66 +194,65 @@ local function AddActIIIStockadesOptions(player, creature)
         player:GossipMenuAddItem(0, "Remind me where the Stockades trail leads.", 0, 403)
     end
 
-    if player:HasQuest(Q.ST_DUNGEON) and not player:GetQuestRewardStatus(Q.ST_DUNGEON) then
+    if IsQuestActive(player, Q.ST_DUNGEON) then
         player:GossipMenuAddItem(0, "Remind me what waits inside the Stockades.", 0, 404)
     end
 end
 
 local function AddActIVAndBeyondOptions(player, creature)
-    if player:HasQuest(Q.SFK_TRAVEL) and not player:GetQuestRewardStatus(Q.SFK_TRAVEL) then
+    if IsQuestActive(player, Q.SFK_TRAVEL) then
         player:GossipMenuAddItem(0, "Send me to Silverpine.", 0, 501)
     end
 
-    if player:HasQuest(Q.SFK_GROUP) and not player:GetQuestRewardStatus(Q.SFK_GROUP) then
+    if IsQuestActive(player, Q.SFK_GROUP) then
         player:GossipMenuAddItem(0, "Send me to Shadowfang Keep.", 0, 502)
     end
 
-    if player:HasQuest(Q.BFD_TRAVEL) and not player:GetQuestRewardStatus(Q.BFD_TRAVEL) then
+    if IsQuestActive(player, Q.BFD_TRAVEL) then
         player:GossipMenuAddItem(0, "Send me to the Zoram Strand.", 0, 503)
     end
 
-    if player:HasQuest(Q.BFD_GROUP) and not player:GetQuestRewardStatus(Q.BFD_GROUP) then
+    if IsQuestActive(player, Q.BFD_GROUP) then
         player:GossipMenuAddItem(0, "Send me to Blackfathom Deeps.", 0, 504)
     end
 
-    if player:HasQuest(Q.GNOMER_TRAVEL) and not player:GetQuestRewardStatus(Q.GNOMER_TRAVEL) then
+    if IsQuestActive(player, Q.GNOMER_TRAVEL) then
         player:GossipMenuAddItem(0, "Send me to Gnomeregan.", 0, 505)
     end
 
-    if player:HasQuest(Q.GNOMER_GROUP) and not player:GetQuestRewardStatus(Q.GNOMER_GROUP) then
+    if IsQuestActive(player, Q.GNOMER_GROUP) then
         player:GossipMenuAddItem(0, "Send me back to Gnomeregan.", 0, 506)
     end
 
-    if player:HasQuest(Q.RFK_TRAVEL) and not player:GetQuestRewardStatus(Q.RFK_TRAVEL) then
+    if IsQuestActive(player, Q.RFK_TRAVEL) then
         player:GossipMenuAddItem(0, "Send me to Razorfen Kraul.", 0, 507)
     end
 
-    if player:HasQuest(Q.RFK_GROUP) and not player:GetQuestRewardStatus(Q.RFK_GROUP) then
+    if IsQuestActive(player, Q.RFK_GROUP) then
         player:GossipMenuAddItem(0, "Send me back to Razorfen Kraul.", 0, 508)
     end
 
     local needsScarletTravel =
-        (player:HasQuest(Q.SM_RED_STANDARD) and not player:GetQuestRewardStatus(Q.SM_RED_STANDARD))
-        or (player:HasQuest(Q.SM_FAITH_WITHOUT_MERCY) and not player:GetQuestRewardStatus(Q.SM_FAITH_WITHOUT_MERCY))
-        or (player:HasQuest(Q.SM_ROAD) and not player:GetQuestRewardStatus(Q.SM_ROAD))
+        IsQuestActive(player, Q.SM_RED_STANDARD)
+        or IsQuestActive(player, Q.SM_FAITH_WITHOUT_MERCY)
+        or IsQuestActive(player, Q.SM_ROAD)
 
     if needsScarletTravel then
         player:GossipMenuAddItem(0, "Send me to Scarlet Monastery.", 0, 509)
     end
 
     local needsUldamanTravel =
-        (player:HasQuest(Q.ULDAMAN_TITAN_ECHOES) and not player:GetQuestRewardStatus(Q.ULDAMAN_TITAN_ECHOES))
-        or (player:HasQuest(Q.ULDAMAN_DWARVEN_ORIGINS) and not player:GetQuestRewardStatus(Q.ULDAMAN_DWARVEN_ORIGINS))
-        or (player:HasQuest(Q.ULDAMAN_TROGG_WARNING) and not player:GetQuestRewardStatus(Q.ULDAMAN_TROGG_WARNING))
-        or (player:HasQuest(Q.ULDAMAN_GROUP) and not player:GetQuestRewardStatus(Q.ULDAMAN_GROUP))
+        IsQuestActive(player, Q.ULDAMAN_TITAN_ECHOES)
+        or IsQuestActive(player, Q.ULDAMAN_DWARVEN_ORIGINS)
+        or IsQuestActive(player, Q.ULDAMAN_TROGG_WARNING)
+        or IsQuestActive(player, Q.ULDAMAN_GROUP)
 
     if needsUldamanTravel then
         player:GossipMenuAddItem(0, "Send me to Uldaman.", 0, 510)
     end
 
     local needsTanarisTravel =
-        player:HasQuest(Q.ZF_SANDS_OF_TANARIS)
-        and not player:GetQuestRewardStatus(Q.ZF_SANDS_OF_TANARIS)
+        IsQuestActive(player, Q.ZF_SANDS_OF_TANARIS)
 
     if needsTanarisTravel then
         player:GossipMenuAddItem(0, "Send me to Gadgetzan.", 0, 511)
@@ -332,7 +340,8 @@ local function CreditEldrinTravelObjectives(player, creature)
     }
 
     for _, rule in ipairs(creditRules) do
-        if player:HasQuest(rule.quest)
+        if rule.quest
+            and player:HasQuest(rule.quest)
             and not player:CanCompleteQuest(rule.quest)
             and creature:GetMapId() == rule.map
             and creature:GetDistance(rule.x, rule.y, rule.z) <= rule.distance then
@@ -345,52 +354,6 @@ local function CreditEldrinTravelObjectives(player, creature)
             end
         end
     end
-end
-
-local DUNGEON_HOME_BIND_BLOCKLIST = {
-    [M.RAGEFIRE_CHASM] = true,
-    [M.WAILING_CAVERNS] = true,
-    [M.DEADMINES] = true,
-    [M.STOCKADES] = true,
-    [M.SHADOWFANG_KEEP] = true,
-    [M.BLACKFATHOM_DEEPS] = true,
-    [M.GNOMEREGAN] = true,
-    [M.RAZORFEN_KRAUL] = true,
-    [M.SCARLET_MONASTERY] = true,
-    [M.ULDAMAN] = true,
-    [M.ZULFARRAK] = true
-}
-
-local function BindHearthstoneToEldrin(player, creature)
-    if not player or not creature then
-        return
-    end
-
-    local mapId = creature:GetMapId()
-
-    -- Do not bind Hearthstone to dungeon/instance maps.
-    if DUNGEON_HOME_BIND_BLOCKLIST[mapId] then
-        return
-    end
-
-    local guid = player:GetGUIDLow()
-    local zoneId = creature:GetZoneId() or 0
-    local x = creature:GetX()
-    local y = creature:GetY()
-    local z = creature:GetZ()
-
-    CharDBExecute(string.format([[
-        INSERT INTO character_homebind
-            (guid, mapId, zoneId, posX, posY, posZ)
-        VALUES
-            (%u, %u, %u, %.6f, %.6f, %.6f)
-        ON DUPLICATE KEY UPDATE
-            mapId = VALUES(mapId),
-            zoneId = VALUES(zoneId),
-            posX = VALUES(posX),
-            posY = VALUES(posY),
-            posZ = VALUES(posZ)
-    ]], guid, mapId, zoneId, x, y, z))
 end
 
 local function OnEldrinGossipHello(event, player, creature)
@@ -423,7 +386,7 @@ local function OnEldrinGossipSelect(event, player, creature, sender, intid, code
 
     -- Act I: Orgrimmar
     if intid == 20 then
-        if player:HasQuest(Q.ORGRIMMAR) and not player:GetQuestRewardStatus(Q.ORGRIMMAR) then
+        if HasOrgrimmarInvestigation(player) then
             Veil.ApplyOrgrimmarToGroup(player)
             U.SendEldrinMessage(player, "Walk through Orgrimmar and speak with the Grunt, Shaman, and Guard. Follow the trail toward Ragefire Chasm.")
             player:GossipComplete()

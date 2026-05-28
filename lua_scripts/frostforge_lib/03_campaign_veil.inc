@@ -248,10 +248,6 @@ local function StartVeilTick(player)
         return
     end
 
-    if Frostforge.CampaignVeil.TickRegistered[guid] then
-        return
-    end
-
     if player.RegisterEvent then
         player:RegisterEvent(MaintainVeil, VEIL_TICK_MS, 0)
         Frostforge.CampaignVeil.TickRegistered[guid] = true
